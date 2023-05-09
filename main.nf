@@ -22,7 +22,7 @@ pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(h
                    .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
 
 
-process make_sv_beds {
+process get_vcfs {
        publishDir params.output_folder+"/VCFs/Closer/", mode: 'copy', pattern: '*closer.snv.vcf.gz'
        publishDir params.output_folder+"/VCFs/Close/", mode: 'copy', pattern: '*close.snv.vcf.gz'
        publishDir params.output_folder+"/VCFs/Unclustered/", mode: 'copy', pattern: '*unclustered.snv.vcf.gz'
@@ -34,9 +34,9 @@ process make_sv_beds {
        file fasta_ref
 
        output:
-       set file("*closer.snv.vcf.gz") into closer
-       set file("*close.snv.vcf.gz") into close
-       set file("*unclustered.snv.vcf.gz") into unclustered
+       file("*closer.snv.vcf.gz") into closer
+       file("*close.snv.vcf.gz") into close
+       file("*unclustered.snv.vcf.gz") into unclustered
        
        shell:
        '''    
