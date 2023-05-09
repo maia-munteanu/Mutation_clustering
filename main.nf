@@ -70,7 +70,7 @@ process get_vcfs {
 process extract96 {
     
     input:
-    file("*.vcf") from closer.collect()
+    path("*.vcf") from closer.collect()
 
     shell:
     '''
