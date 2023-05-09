@@ -1,7 +1,0 @@
-singularity {
-        enabled = true
-        autoMounts = true
-        runOptions = '-B /g/strcombio/fsupek_cancer1/SV_clusters_project/nextflow_analysis -B /local_scratch/tmp/ -B /home/'
-}
-
-process.memory = '15G'
