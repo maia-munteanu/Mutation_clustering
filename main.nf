@@ -23,8 +23,8 @@ pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(h
 
 
 process get_vcfs {
-       publishDir params.output_folder+"/VCFs/Closer_/"+closer_bp, mode: 'copy', pattern: '*closer.snv.vcf'
-       publishDir params.output_folder+"/VCFs/Close_/+close_bp", mode: 'copy', pattern: '*close.snv.vcf'
+       publishDir params.output_folder+"/VCFs/Closer_/"+closer_bp+"/", mode: 'copy', pattern: '*closer.snv.vcf'
+       publishDir params.output_folder+"/VCFs/Close_/"+close_bp+"/", mode: 'copy', pattern: '*close.snv.vcf'
        publishDir params.output_folder+"/VCFs/Unclustered/", mode: 'copy', pattern: '*unclustered.snv.vcf'
        publishDir params.output_folder+"/VCFs/Whole/", mode: 'copy', pattern: '*filt.vcf.gz'
     
