@@ -28,7 +28,7 @@ process get_vcfs {
        publishDir params.output_folder+"/VCFs/Whole/", mode: 'copy', pattern: '*filt.vcf.gz'
     
        input:
-       set val sample, path sv, path snv from pairs_list
+       set val sample, file(sv), file(snv) from pairs_list
        path hg19
        path CRG75
        path fasta_ref
