@@ -74,6 +74,7 @@ process extract96 {
 
     shell:
     '''
+    mkdir VCFs && mv *vcf VCFs
     echo "Triggered once after all files complete!"
     python3 !{baseDir}/Extractor.py
    '''     
