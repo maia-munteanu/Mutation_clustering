@@ -13,11 +13,11 @@ params.fasta_ref = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
 params.hg19 = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.genome"
 params.CRG75 = "/home/mmunteanu/reference/CRG75_nochr.bed"
 
-close_bp=params.close_value
-closer_bp=params.closer_value
+close_bp = params.close_value
+closer_bp = params.closer_value
 hg19 = file(params.hg19)
-fasta_ref= file(params.fasta_ref)
-CRG75= file(params.CRG75)
+fasta_ref = file(params.fasta_ref)
+CRG75 = ile(params.CRG75)
 pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
 
