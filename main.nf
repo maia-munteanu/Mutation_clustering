@@ -23,9 +23,10 @@ pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(h
 
 
 process get_vcfs {
-       publishDir params.output_folder+"/VCFs/Closer/", mode: 'copy', pattern: '*closer.snv.vcf.gz'
-       publishDir params.output_folder+"/VCFs/Close/", mode: 'copy', pattern: '*close.snv.vcf.gz'
-       publishDir params.output_folder+"/VCFs/Unclustered/", mode: 'copy', pattern: '*unclustered.snv.vcf.gz'
+       publishDir params.output_folder+"/VCFs/Closer_!{closer_bp}/", mode: 'copy', pattern: '*closer.snv.vcf'
+       publishDir params.output_folder+"/VCFs/Close_!{close_bp}/", mode: 'copy', pattern: '*close.snv.vcf'
+       publishDir params.output_folder+"/VCFs/Unclustered/", mode: 'copy', pattern: '*unclustered.snv.vcf'
+       publishDir params.output_folder+"/VCFs/Whole/", mode: 'copy', pattern: '*filt.vcf.gz'
     
        input:
        set val(sample), file(sv), file(snv) from pairs_list
@@ -34,9 +35,9 @@ process get_vcfs {
        file fasta_ref
 
        output:
-       file("*closer.snv.vcf.gz") into closer
-       file("*close.snv.vcf.gz") into close
-       file("*unclustered.snv.vcf.gz") into unclustered
+       file("*snv.vcf") into outputs
+       file("*filt.vcf.gz") into others
+      
        
        shell:
        '''    
@@ -54,11 +55,11 @@ process get_vcfs {
        [ -s !{sample}.close.bed  ] && echo "Close file not empty" || echo -e '1\t0\t1' >> !{sample}.close.bed 
        
        tabix -p vcf !{snv}
-       bcftools view -f 'PASS' --regions-file !{CRG75} !{snv} | bcftools sort -Oz > !{sample}.filt.vcf.gz
+       bcftools view -f 'PASS' --types snps --regions-file !{CRG75} !{snv} | bcftools sort -Oz > !{sample}.filt.vcf.gz
        tabix -p vcf !{sample}.filt.vcf.gz
        
-       bcftools view -f PASS --types snps --regions-file !{sample}.closer.bed  !{sample}.filt.vcf.gz | bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.!{closer_bp}.closer.snv.vcf.gz
-       bcftools view -f PASS --types snps --regions-file !{sample}.close.bed  !{sample}.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.!{close_bp}.close.snv.vcf.gz
-       bcftools view -f PASS --types snps --regions-file !{sample}.unclustered.bed !{sample}.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.unclustered.snv.vcf.gz
+       bcftools view --regions-file !{sample}.closer.bed  !{sample}.filt.vcf.gz | bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.closer.snv.vcf
+       bcftools view --regions-file !{sample}.close.bed  !{sample}.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.close.snv.vcf
+       bcftools view --regions-file !{sample}.unclustered.bed !{sample}.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.unclustered.snv.vcf
        '''
   }
