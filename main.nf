@@ -15,8 +15,8 @@ params.CRG75 = "/home/mmunteanu/reference/CRG75_nochr.bed"
 
 close_bp = params.close_value
 closer_bp = params.closer_value
-hg19 = file(params.hg19)
 fasta_ref = file(params.fasta_ref)
+hg19 = file(params.hg19)
 CRG75 = ile(params.CRG75)
 pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
