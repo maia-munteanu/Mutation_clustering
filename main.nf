@@ -15,11 +15,11 @@ params.CRG75 = "/home/mmunteanu/reference/CRG75_nochr.bed"
 
 close_bp=params.close_value
 closer_bp=params.closer_value
-hg19 = file(params.hg19)
-fasta_ref=file(params.fasta_ref)
-CRG75=file(params.CRG75)
+hg19 = path(params.hg19)
+fasta_ref=path(params.fasta_ref)
+CRG75=path(params.CRG75)
 pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-                   .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
+                   .map{ row -> [ row.sample, path(row.sv), path(row.snv) ] }.view()
 
 
 process get_vcfs {
@@ -29,16 +29,16 @@ process get_vcfs {
        publishDir params.output_folder+"/VCFs/Whole/", mode: 'copy', pattern: '*filt.vcf.gz'
     
        input:
-       set val(sample), file(sv), file(snv) from pairs_list
-       file hg19
-       file CRG75
-       file fasta_ref
+       set val(sample), path(sv), path(snv) from pairs_list
+       path hg19
+       path CRG75
+       path fasta_ref
 
        output:
-       file("*closer.snv.vcf") into closer
-       file("*close.snv.vcf") into close
-       file("*unclustered.snv.vcf") into unclustered
-       file("*filt.vcf.gz") into others
+       path("*closer.snv.vcf") into closer
+       path("*close.snv.vcf") into close
+       path("*unclustered.snv.vcf") into unclustered
+       path("*filt.vcf.gz") into others
       
        shell:
        '''    
