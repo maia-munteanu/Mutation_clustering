@@ -72,10 +72,9 @@ process extract96 {
     input:
     val file(*.vcf) from closer.collect()
 
-    script:
-    """
+    shell:
+    '''
     echo "Triggered once after all files complete!"
     Rscript !{baseDir}/Extractor.R pwd
-    """
-        
+   '''     
 }
