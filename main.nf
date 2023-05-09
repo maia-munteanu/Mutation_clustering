@@ -35,10 +35,11 @@ process get_vcfs {
        file fasta_ref
 
        output:
-       file("*snv.vcf") into outputs
+       file("*closer.snv.vcf") into closer
+       file("*close.snv.vcf") into close
+       file("*unclustered.snv.vcf") into unclustered
        file("*filt.vcf.gz") into others
       
-       
        shell:
        '''    
        Rscript !{baseDir}/simple-event-annotation.R !{sv} !{sample}
@@ -65,3 +66,16 @@ process get_vcfs {
        bcftools view --regions-file !{sample}.unclustered.bed !{sample}.snv.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.unclustered.snv.vcf
        '''
   }
+  
+  process merge_results {
+    
+    input:
+    val file(*.vcf) from closer.collect()
+
+    script:
+    """
+    echo "Triggered once after all files complete!"
+    Rscript !{baseDir}/Extractor.R pwd
+    """
+        
+}
