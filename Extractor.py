@@ -11,6 +11,6 @@ from SigProfilerExtractor import sigpro as sig
 
 from SigProfilerMatrixGenerator.scripts import SigProfilerMatrixGeneratorFunc as matGen
 def main_function():
-     matrices = matGen.SigProfilerMatrixGeneratorFunc("test", "GRCh37", "./VCFs/",plot=False, exome=False, bed_file=None, chrom_based=False, tsb_stat=False, seqInfo=False, cushion=100)
+     matrices = matGen.SigProfilerMatrixGeneratorFunc("closer", "GRCh37", "./VCFs/",plot=False, exome=False, bed_file=None, chrom_based=False, tsb_stat=False, seqInfo=False, cushion=100)
 if __name__=="__main__":
    main_function()
