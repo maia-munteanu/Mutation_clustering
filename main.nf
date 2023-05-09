@@ -19,7 +19,7 @@ hg19 = path params.hg19
 fasta_ref=path params.fasta_ref
 CRG75=path params.CRG75
 pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-                   .map{ row -> [ row.sample, row.sv, row.snv ] }.view()
+                   .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
 
 
 process get_vcfs {
