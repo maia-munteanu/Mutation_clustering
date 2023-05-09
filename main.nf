@@ -13,7 +13,6 @@ params.fasta_ref = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
 params.hg19 = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.genome"
 params.CRG75 = "/home/mmunteanu/reference/CRG75_nochr.bed"
 
-
 close_bp=params.close_value
 closer_bp=params.closer_value
 hg19 = file(params.hg19)
@@ -22,8 +21,8 @@ CRG75=file(params.CRG75)
 pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
 
-process make_sv_beds {
 
+process make_sv_beds {
        publishDir params.output_folder+"/VCFs/Closer/", mode: 'copy', pattern: '*closer.snv.vcf.gz'
        publishDir params.output_folder+"/VCFs/Close/", mode: 'copy', pattern: '*close.snv.vcf.gz'
        publishDir params.output_folder+"/VCFs/Unclustered/", mode: 'copy', pattern: '*unclustered.snv.vcf.gz'
@@ -61,6 +60,5 @@ process make_sv_beds {
        bcftools view -f PASS --types snps --regions-file !{sample}.closer.bed  !{sample}.filt.vcf.gz | bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.!{closer_bp}.closer.snv.vcf.gz
        bcftools view -f PASS --types snps --regions-file !{sample}.close.bed  !{sample}.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.!{close_bp}.close.snv.vcf.gz
        bcftools view -f PASS --types snps --regions-file !{sample}.unclustered.bed !{sample}.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.unclustered.snv.vcf.gz
-       
        '''
   }
