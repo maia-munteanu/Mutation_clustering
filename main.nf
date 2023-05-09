@@ -58,7 +58,7 @@ process get_vcfs {
        
        tabix -p vcf !{snv}
        bcftools view -f 'PASS' --types snps --regions-file !{CRG75} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
-       tabix -p vcf !{sample}.filt.vcf.gz
+       tabix -p vcf !{sample}.snv.filt.vcf.gz
        
        bcftools view --regions-file !{sample}.closer.bed  !{sample}.snv.filt.vcf.gz | bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.closer.snv.vcf
        bcftools view --regions-file !{sample}.close.bed  !{sample}.snv.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.close.snv.vcf
