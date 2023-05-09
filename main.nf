@@ -75,6 +75,6 @@ process extract96 {
     shell:
     '''
     echo "Triggered once after all files complete!"
-    Rscript !{baseDir}/Extractor.R pwd
+    python3 !{baseDir}/Extractor.py
    '''     
 }
