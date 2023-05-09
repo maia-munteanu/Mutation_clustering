@@ -67,7 +67,7 @@ process get_vcfs {
        '''
   }
   
-  process merge_results {
+process extract96 {
     
     input:
     val file(*.vcf) from closer.collect()
