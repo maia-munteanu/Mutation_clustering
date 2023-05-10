@@ -14,6 +14,6 @@ from SigProfilerMatrixGenerator.scripts import SigProfilerMatrixGeneratorFunc as
 #   main_function()
 
 def main_function():
-     matrices = matGen.SigProfilerMatrixGeneratorFunc(project, genome, output,plot=False, exome=False, bed_file=None, chrom_based=False, tsb_stat=False, seqInfo=False, cushion=100)
+     matrices = matGen.SigProfilerMatrixGeneratorFunc(project, genome, output, plot=False, exome=False, bed_file=None, chrom_based=False, tsb_stat=False, seqInfo=False, cushion=100)
 if __name__=="__main__":
    main_function()
