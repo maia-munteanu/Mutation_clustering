@@ -30,3 +30,7 @@ RUN R -e "options(timeout = 6000); BiocManager::install('BSgenome.Hsapiens.UCSC.
 RUN R -e "options(timeout = 6000); BiocManager::install('TxDb.Hsapiens.UCSC.hg19.knownGene')"
 RUN R -e "options(timeout = 6000); BiocManager::install('org.Hs.eg.db')"
 RUN python3 -c "exec(\"from SigProfilerMatrixGenerator import install as genInstall; genInstall.install('GRCh37', rsync=False)\")"
+
+### Instructions ###
+#sudo docker build -t clusters .
+#sudo singularity build Sigproclust.img docker-daemon://clusters:latest
