@@ -37,7 +37,7 @@ process parse_vcfs {
        path "*closer.snv.vcf" into closer
        path "*close.snv.vcf" into close
        path "*unclustered.snv.vcf" into unclustered
-       path "*filt.vcf.gz" into others
+       path "*.snv.filt.vcf.gz" into whole
       
        shell:
        '''  
@@ -67,6 +67,21 @@ process parse_vcfs {
        '''
   }
   
+process get_clusters {
+
+    input:
+    path "*" from whole.collect()
+    
+    shell:
+    '''  
+    mkdir VCFs && mv *snv.filt.vcf.gz VCFs
+    python3 !{baseDir}/Clusters.py
+    
+    ''' 
+
+
+}
+ 
 process count_mutations {
     publishDir params.output_folder+"/Counts/", mode: 'copy', pattern: '*.all'
     
