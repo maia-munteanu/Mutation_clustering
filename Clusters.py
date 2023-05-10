@@ -4,9 +4,9 @@ import sys
 from SigProfilerSimulator import SigProfilerSimulator as sigSim
 from SigProfilerClusters import SigProfilerClusters as hp
 
-project="Test"
-path="./VCFs/"
-genome="GRCh37"
+project = sys.argv[1]
+genome = sys.argv[2]
+path = sys.argv[3]
 
 def main():
     sigSim.SigProfilerSimulator(project, path, genome, contexts=["96"], simulations=100, chrom_based=True)
