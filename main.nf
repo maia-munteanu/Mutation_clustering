@@ -40,29 +40,29 @@ process get_vcfs {
        path "*filt.vcf.gz" into others
       
        shell:
-       '''    
+       '''  
+       tumor=$(bcftools query -l !{sv} | sed -n 2p)
+       
        Rscript !{baseDir}/simple-event-annotation.R !{sv} !{sample}
        bcftools sort -Oz !{sample}.sv.ann.vcf > !{sample}.sv.ann.vcf.gz
        tabix -p vcf !{sample}.sv.ann.vcf.gz
-       bcftools view -f 'PASS' --regions-file !{CRG75} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
+       bcftools view -s $tumor -f 'PASS' --regions-file !{CRG75} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
        bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.bed
        
        bedtools slop -i !{sample}.sv.bed -g !{hg19} -b !{closer_bp} | sort -k1,1 -k2,2n | bedtools merge > !{sample}.closer.bed
        bedtools slop -i !{sample}.sv.bed -g !{hg19} -b !{close_bp} > !{sample}.cluster.bed
-       
        bedtools complement -i !{sample}.cluster.bed -g !{hg19} | sort -k1,1 -k2,2n | bedtools merge > !{sample}.unclustered.bed
        bedtools subtract -a !{sample}.cluster.bed -b !{sample}.closer.bed | sort -k1,1 -k2,2n | bedtools merge > !{sample}.close.bed             
-       
        [ -s !{sample}.closer.bed  ] && echo "Closer file not empty" || echo -e '1\t0\t1' >> !{sample}.closer.bed 
        [ -s !{sample}.close.bed  ] && echo "Close file not empty" || echo -e '1\t0\t1' >> !{sample}.close.bed 
        
        tabix -p vcf !{snv}
-       bcftools view -f 'PASS' --types snps --regions-file !{CRG75} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
+       bcftools view -s $tumor -f 'PASS' --types snps --regions-file !{CRG75} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
        tabix -p vcf !{sample}.snv.filt.vcf.gz
        
-       bcftools view --regions-file !{sample}.closer.bed  !{sample}.snv.filt.vcf.gz | bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.closer.snv.vcf
-       bcftools view --regions-file !{sample}.close.bed  !{sample}.snv.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.close.snv.vcf
-       bcftools view --regions-file !{sample}.unclustered.bed !{sample}.snv.filt.vcf.gz |  bcftools norm -d all -f !{fasta_ref} | bcftools sort -Ov > !{sample}.unclustered.snv.vcf
+       bcftools view --regions-file !{sample}.closer.bed  !{sample}.snv.filt.vcf.gz | bcftools norm -d none -f !{fasta_ref} | bcftools sort -Ov > !{sample}.closer.snv.vcf
+       bcftools view --regions-file !{sample}.close.bed  !{sample}.snv.filt.vcf.gz |  bcftools norm -d none -f !{fasta_ref} | bcftools sort -Ov > !{sample}.close.snv.vcf
+       bcftools view --regions-file !{sample}.unclustered.bed !{sample}.snv.filt.vcf.gz |  bcftools norm -d none -f !{fasta_ref} | bcftools sort -Ov > !{sample}.unclustered.snv.vcf
        '''
   }
   
