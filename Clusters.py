@@ -14,6 +14,6 @@ if __name__ == '__main__':
         main()
 
 def main():
-    hp.analysis(project, genome, contexts="96", simContext=["96"], path, subClassify=True, standardVC=True, TCGA=False, sanger=False, probability=True)
+    hp.analysis(project, genome, contexts="96", simContext=["96"], input_path=path, subClassify=True, standardVC=True, TCGA=False, sanger=False, probability=True)
 if __name__ == '__main__':
         main()
