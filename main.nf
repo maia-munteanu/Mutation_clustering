@@ -21,7 +21,7 @@ CRG75 = file(params.CRG75)
 pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
 
-process get_vcfs {
+process parse_vcfs {
        publishDir params.output_folder+"/VCFs/Closer_"+closer_bp+"/", mode: 'copy', pattern: '*closer.snv.vcf'
        publishDir params.output_folder+"/VCFs/Close_"+close_bp+"/", mode: 'copy', pattern: '*close.snv.vcf'
        publishDir params.output_folder+"/VCFs/Unclustered/", mode: 'copy', pattern: '*unclustered.snv.vcf'
@@ -67,7 +67,7 @@ process get_vcfs {
        '''
   }
   
-process count96 {
+process count_mutations {
     publishDir params.output_folder+"/Counts/", mode: 'copy', pattern: '*.all'
     
     input:
