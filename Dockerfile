@@ -33,5 +33,6 @@ RUN R -e "options(timeout = 6000); BiocManager::install('org.Hs.eg.db')"
 RUN python3 -c "exec(\"from SigProfilerMatrixGenerator import install as genInstall; genInstall.install('GRCh37', rsync=False)\")"
 
 ### Instructions ###
-#sudo docker build -t clusters .
-#sudo singularity build Sigproclust.img docker-daemon://clusters:latest
+# sudo docker build -t clusters .
+# sudo singularity build Sigproclust.img docker-daemon://clusters:latest
+# scp Sigproclust.img mmunteanu@fsupeksvr.irb.pcb.ub.es:/home/mmunteanu/
