@@ -68,7 +68,7 @@ process get_vcfs {
   }
   
 process extract96 {
-    publishDir params.output_folder+"/VCFs/Counts", mode: 'copy', pattern: '*.all'
+    publishDir params.output_folder+"/VCFs/Counts/", mode: 'copy', pattern: '*.all'
     
     input:
     path "*" from closer.collect()
