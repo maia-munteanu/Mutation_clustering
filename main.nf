@@ -68,10 +68,15 @@ process get_vcfs {
   }
   
 process extract96 {
+    publishDir params.output_folder+"/VCFs/Counts", mode: 'copy', pattern: '*.all'
+    
     input:
     path "*" from closer.collect()
     path "*" from close.collect()
     path "*" from unclustered.collect()
+    
+    output:
+    path "*.all" into counts
 
     shell:
     '''
@@ -83,5 +88,10 @@ process extract96 {
     python3 !{baseDir}/MatrixGenerator.py "closer" "GRCh37" "./closer_VCFs/"
     python3 !{baseDir}/MatrixGenerator.py "close" "GRCh37" "./close_VCFs/"
     python3 !{baseDir}/MatrixGenerator.py "unclustered" "GRCh37" "./unclustered_VCFs/"
+    
+    cp ./closer_VCFs/output/SBS/closer.SBS96.all ./
+    cp ./close_VCFs/output/SBS/close.SBS96.all ./
+    cp ./unclustered_VCFs/output/SBS/unclustered.SBS96.all ./
+    
    '''     
 }
