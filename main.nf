@@ -68,14 +68,20 @@ process get_vcfs {
   }
   
 process extract96 {
-    
     input:
     path "*" from closer.collect()
+    path "*" from close.collect()
+    path "*" from unclustered.collect()
 
     shell:
     '''
-    mkdir VCFs && mv *vcf VCFs
+    mkdir closer_VCFs && mv *closer.snv.vcf closer_VCFs
+    mkdir close_VCFs && mv *close.snv.vcf close_VCFs
+    mkdir unclustered_VCFs && mv *unclustered.snv.vcf unclustered_VCFs
+    
     echo "Triggered once after all files complete!"
-    python3 !{baseDir}/MatrixGenerator.py "closer" "GRCh37" "./VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "closer" "GRCh37" "./closer_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "close" "GRCh37" "./close_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "unclustered" "GRCh37" "./unclustered_VCFs/"
    '''     
 }
