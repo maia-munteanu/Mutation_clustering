@@ -3,10 +3,14 @@ import os
 import sys
 from SigProfilerExtractor import sigpro as sig
 
+project = sys.argv[1]
+matrix = sys.argv[2]
+genome = sys.argv[3]
+minsig = sys.argv[4]
+maxsig = sys.argv[4]
 
-sig.sigProfilerExtractor("matrix", "results", "path/to/21BRCA.txt", reference_genome="GRCh37", minimum_signatures=1, maximum_signatures=10, nmf_replicates=100, cpu=1)
+def main_function():
+      sig.sigProfilerExtractor("matrix", project, matrix, reference_genome=genome, minimum_signatures=minsig, maximum_signatures=maxsig, nmf_replicates=100, cpu=4)
+if __name__=="__main__":
+   main_function()
 
-sigProfilerExtractor(input_type, out_put, input_data, reference_genome="GRCh37", opportunity_genome = "GRCh37", context_type = "default", exome = False, 
-                         minimum_signatures=1, maximum_signatures=10, nmf_replicates=100, resample = True, batch_size=1, cpu=-1, gpu=False, 
-                         nmf_init="random", precision= "single", matrix_normalization= "gmm", seeds= "random", 
-                         min_nmf_iterations= 10000, max_nmf_iterations=1000000, nmf_test_conv= 10000, nmf_tolerance= 1e-15, get_all_signature_matrices= False)
