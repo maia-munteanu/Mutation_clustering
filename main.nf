@@ -74,7 +74,8 @@ process get_clusters {
     
     shell:
     '''  
-    mkdir VCFs && mv *snv.filt.vcf.gz VCFs
+    gunzip *.vcf.gz
+    mkdir VCFs && mv *snv.filt.vcf VCFs
     python3 !{baseDir}/Clusters.py
     
     ''' 
