@@ -1,5 +1,10 @@
+#!/usr/bin/env python3
+import os
+import sys
+from SigProfilerExtractor import sigpro as sig
 
 
+sig.sigProfilerExtractor("matrix", "results", "path/to/21BRCA.txt", reference_genome="GRCh37", minimum_signatures=1, maximum_signatures=10, nmf_replicates=100, cpu=1)
 
 sigProfilerExtractor(input_type, out_put, input_data, reference_genome="GRCh37", opportunity_genome = "GRCh37", context_type = "default", exome = False, 
                          minimum_signatures=1, maximum_signatures=10, nmf_replicates=100, resample = True, batch_size=1, cpu=-1, gpu=False, 
