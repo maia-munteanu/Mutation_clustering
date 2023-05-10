@@ -67,7 +67,7 @@ process get_vcfs {
        '''
   }
   
-process extract96 {
+process count96 {
     publishDir params.output_folder+"/Counts/", mode: 'copy', pattern: '*.all'
     
     input:
