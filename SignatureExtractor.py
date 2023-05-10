@@ -7,7 +7,7 @@ project = sys.argv[1]
 matrix = sys.argv[2]
 genome = sys.argv[3]
 minsig = sys.argv[4]
-maxsig = sys.argv[4]
+maxsig = sys.argv[5]
 
 def main_function():
       sig.sigProfilerExtractor("matrix", project, matrix, reference_genome=genome, minimum_signatures=minsig, maximum_signatures=maxsig, nmf_replicates=100, cpu=4)
