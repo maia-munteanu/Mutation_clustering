@@ -10,6 +10,7 @@ RUN pip3 install pycairo
 RUN pip3 install matplotlib
 RUN pip3 install seaborn
 RUN pip3 install SigProfilerMatrixGenerator
+RUN pip3 install SigProfilerExtractor
 RUN pip3 install SigProfilerSimulator
 RUN pip3 install SigProfilerClusters
 RUN R -e "install.packages('data.table')"
