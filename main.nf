@@ -105,3 +105,18 @@ process count_mutations {
     cp ./unclustered_VCFs/output/SBS/unclustered.SBS96.all ./
    '''     
 }
+
+process get_signatures {
+
+    input:
+    path "*" from counts
+    
+    shell:
+    '''
+    python3 !{baseDir}/SignatureExtractor.py
+    '''
+
+
+
+
+}
