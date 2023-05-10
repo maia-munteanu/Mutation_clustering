@@ -68,7 +68,6 @@ process parse_vcfs {
   }
   
 process get_clusters {
-
     input:
     path "*" from whole.collect()
     
@@ -77,10 +76,7 @@ process get_clusters {
     gunzip --force *.vcf.gz
     mkdir VCFs && mv *snv.filt.vcf VCFs
     python3 !{baseDir}/Clusters.py
-    
     ''' 
-
-
 }
  
 process count_mutations {
@@ -107,6 +103,5 @@ process count_mutations {
     cp ./closer_VCFs/output/SBS/closer.SBS96.all ./
     cp ./close_VCFs/output/SBS/close.SBS96.all ./
     cp ./unclustered_VCFs/output/SBS/unclustered.SBS96.all ./
-    
    '''     
 }
