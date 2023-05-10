@@ -41,8 +41,8 @@ process get_vcfs {
       
        shell:
        '''  
-       svname = $(bcftools query -l !{sv} | sed -n 2p)
-       snvname = $(bcftools query -l !{snv} | sed -n 2p)
+       svname=$(bcftools query -l !{sv} | sed -n 2p)
+       snvname=$(bcftools query -l !{snv} | sed -n 2p)
        
        Rscript !{baseDir}/simple-event-annotation.R !{sv} !{sample}
        bcftools sort -Oz !{sample}.sv.ann.vcf > !{sample}.sv.ann.vcf.gz
