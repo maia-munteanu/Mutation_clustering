@@ -34,5 +34,5 @@ RUN python3 -c "exec(\"from SigProfilerMatrixGenerator import install as genInst
 
 ### Instructions ###
 # sudo docker build -t clusters .
-# sudo singularity build Sigproclust.img docker-daemon://clusters:latest
+# sudo singularity build Clusters.img docker-daemon://clusters:latest
 # scp Clusters.img mmunteanu@fsupeksvr.irb.pcb.ub.es:/home/mmunteanu/
