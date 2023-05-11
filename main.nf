@@ -113,7 +113,9 @@ process get_signatures {
     
     shell:
     '''
-    python3 !{baseDir}/SignatureExtractor.py "Signatures" "./closer.SBS96.all" "GRCh37" 1 5
+    #python3 !{baseDir}/SignatureExtractor.py "Signatures" "./closer.SBS96.all" "GRCh37" 1 5
+    python3 !{baseDir}/SignatureExtractor.py 
+
     '''
 
 
