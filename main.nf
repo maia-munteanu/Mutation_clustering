@@ -115,7 +115,8 @@ process get_signatures {
     '''
     #python3 !{baseDir}/SignatureExtractor.py "Signatures" "./closer.SBS96.all" "GRCh37" 1 5
     mkdir Unclustered && mv *uncl* Unclustered
-    python3 !{baseDir}/SignatureExtractor.py 
+    Rscript SignatureExtractor.R
+    #python3 !{baseDir}/SignatureExtractor.py 
 
     '''
 
