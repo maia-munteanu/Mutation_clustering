@@ -95,14 +95,16 @@ process count_mutations {
     mkdir closer_VCFs && mv *closer.snv.vcf closer_VCFs
     mkdir close_VCFs && mv *close.snv.vcf close_VCFs
     mkdir unclustered_VCFs && mv *unclustered.snv.vcf unclustered_VCFs
+
+    Rscript !{baseDir}/SignatureExtractor.R
     
-    python3 !{baseDir}/MatrixGenerator.py "closer" "GRCh37" "./closer_VCFs/"
-    python3 !{baseDir}/MatrixGenerator.py "close" "GRCh37" "./close_VCFs/"
-    python3 !{baseDir}/MatrixGenerator.py "unclustered" "GRCh37" "./unclustered_VCFs/"
+    #python3 !{baseDir}/MatrixGenerator.py "closer" "GRCh37" "./closer_VCFs/"
+    #python3 !{baseDir}/MatrixGenerator.py "close" "GRCh37" "./close_VCFs/"
+    #python3 !{baseDir}/MatrixGenerator.py "unclustered" "GRCh37" "./unclustered_VCFs/"
     
     cp ./closer_VCFs/output/SBS/closer.SBS96.all ./
-    cp ./close_VCFs/output/SBS/close.SBS96.all ./
-    cp ./unclustered_VCFs/output/SBS/unclustered.SBS96.all ./
+    #cp ./close_VCFs/output/SBS/close.SBS96.all ./
+    #cp ./unclustered_VCFs/output/SBS/unclustered.SBS96.all ./
    '''     
 }
 
