@@ -108,20 +108,6 @@ process count_mutations {
    '''     
 }
 
-test = counts
-             .map ({ it -> [it, it.replaceAll(".SBS96.all","")] })
-             .view()
-
-process testing {
-    input:
-    path "*" from test
-    
-    shell:
-    '''
-    ls -lt 
-    '''
-}
-
 process get_signatures {
     input:
     path "*" from counts
