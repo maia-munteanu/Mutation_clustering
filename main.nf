@@ -120,8 +120,4 @@ process get_signatures {
     python3 !{baseDir}/SignatureExtractor.py 
 
     '''
-
-
-
-
 }
