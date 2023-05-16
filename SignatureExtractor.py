@@ -10,14 +10,8 @@ minsig = sys.argv[4]
 maxsig = sys.argv[5]
 
 def main_function():
-      sig.sigProfilerExtractor("matrix", project, matrix, reference_genome=genome, minimum_signatures=minsig, maximum_signatures=maxsig, nmf_replicates=100, cpu=8)
+      sig.sigProfilerExtractor("matrix", project, matrix, reference_genome=genome, minimum_signatures=1, maximum_signatures=5, nmf_replicates=100, cpu=8)
 if __name__=="__main__":
    main_function()
 
-
-
-
-def main_function():
-      sig.sigProfilerExtractor("matrix", project, matrix, reference_genome=genome, minimum_signatures=minsig, maximum_signatures=maxsig, nmf_replicates=100, cpu=4)
-      sig.sigProfilerExtractor("matrix", "Signatures", "./closer.SBS96.all", reference_genome="GRCh37", minimum_signatures=1, maximum_signatures=5, nmf_replicates=100, cpu=1)
 
