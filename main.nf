@@ -107,16 +107,18 @@ process count_mutations {
 }
 
 process get_signatures {
-    conda '/home/dnaro/.conda/envs/torchcuda'
-    afterScript 'set +u; conda deactivate'
-
     input:
     path "*" from counts
     
     shell:
     '''
+
+    mkdir Unclustered && mv closer.SBS96.all Closer
+    mkdir Close && mv close.SBS96.all Close
+    mkdir Unclustered && mv unclustered.SBS96.all Unclustered
+
     #python3 !{baseDir}/SignatureExtractor.py "Signatures" "./closer.SBS96.all" "GRCh37" 1 5
-    mkdir Unclustered && mv *uncl* Unclustered
+    
     python3 !{baseDir}/SignatureExtractor.py 
 
     '''
