@@ -108,7 +108,9 @@ process count_mutations {
    '''     
 }
 
-test = counts.multiMap()
+test = counts
+             .map ({ it -> [it, it.replaceAll(".SBS96.all","")] })
+             .view()
 
 process testing {
     input:
