@@ -112,7 +112,6 @@ process get_signatures {
     
     shell:
     '''
-
     mkdir Unclustered && mv closer.SBS96.all Closer
     mkdir Close && mv close.SBS96.all Close
     mkdir Unclustered && mv unclustered.SBS96.all Unclustered
