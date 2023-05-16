@@ -108,6 +108,18 @@ process count_mutations {
    '''     
 }
 
+test = counts.multiMap()
+
+process testing {
+    input:
+    path "*" from test
+    
+    shell:
+    '''
+    ls -lt 
+    '''
+}
+
 process get_signatures {
     input:
     path "*" from counts
