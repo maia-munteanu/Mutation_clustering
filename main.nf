@@ -116,10 +116,9 @@ process get_signatures {
     mkdir Unclustered && mv closer.SBS96.all Closer
     mkdir Close && mv close.SBS96.all Close
     mkdir Unclustered && mv unclustered.SBS96.all Unclustered
-
-    #python3 !{baseDir}/SignatureExtractor.py "Signatures" "./closer.SBS96.all" "GRCh37" 1 5
     
-    python3 !{baseDir}/SignatureExtractor.py 
-
+    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" "GRCh37" 1 5
+    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" "GRCh37" 1 5
+    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" "GRCh37" 1 5
     '''
 }
