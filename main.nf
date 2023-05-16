@@ -64,6 +64,8 @@ process parse_vcfs {
        bcftools view --regions-file !{sample}.closer.bed  !{sample}.snv.filt.vcf.gz | bcftools norm -d none -f !{fasta_ref} | bcftools sort -Ov > !{sample}.closer.snv.vcf
        bcftools view --regions-file !{sample}.close.bed  !{sample}.snv.filt.vcf.gz |  bcftools norm -d none -f !{fasta_ref} | bcftools sort -Ov > !{sample}.close.snv.vcf
        bcftools view --regions-file !{sample}.unclustered.bed !{sample}.snv.filt.vcf.gz |  bcftools norm -d none -f !{fasta_ref} | bcftools sort -Ov > !{sample}.unclustered.snv.vcf
+
+       echo test >> test.txt && cp test.txt /home/mmunteanu/tools/annovar/humandb/
        '''
   }
   
