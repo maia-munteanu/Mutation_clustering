@@ -107,6 +107,8 @@ process count_mutations {
 }
 
 process get_signatures {
+    conda '/home/dnaro/.conda/envs/torchcuda'
+    afterScript 'set +u; conda deactivate'
 
     input:
     path "*" from counts
