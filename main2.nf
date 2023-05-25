@@ -37,10 +37,10 @@ if (params.serial_genome){
     
 process test {
         input: 
-        file genome from serial_genome
+        file serial_genome
         
         shell:
         '''
-        echo !{genome}
+        echo !{serial_genome}
         '''
 }
