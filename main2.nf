@@ -37,7 +37,7 @@ if (params.serial_genome){
     
 process test {
         input: 
-        file genome from serial_genome
+        file "${params.assembly}.fa.p" from serial_genome
         
         shell:
         '''
