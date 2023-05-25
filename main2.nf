@@ -55,3 +55,11 @@ if (params.chr_sizes){
 pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
                    
+                   
+process parse_vcfs {
+
+
+
+
+
+}
