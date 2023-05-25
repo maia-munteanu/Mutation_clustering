@@ -87,9 +87,7 @@ process parse_vcfs {
        
        tabix -p vcf !{snv}
        bcftools view -s $snvname -f 'PASS' --types snps --regions-file !{mappability} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
-       tabix -p vcf !{sample}.snv.filt.vcf.gz
-       #bcftools query -f '%CHROM\t%POS\t%POS\t%REF\t%ALT{0}\t1\t!{sample}\n' !{sample}.snv.filt.vcf.gz > "!{sample}.snv.tsv"
-       
+       tabix -p vcf !{sample}.snv.filt.vcf.gz       
        '''
        
 }
