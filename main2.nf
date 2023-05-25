@@ -23,7 +23,6 @@ if (params.serial_genome){
       serial_genome = file(params.serial_genome)
 }else{      
     process serialize_genome {
-        container = '/home/mmunteanu/Randommut.img'
         input: 
         file "${params.assembly}.fa" from reference
 
@@ -36,3 +35,12 @@ if (params.serial_genome){
     }
 }
     
+process test {
+        input: 
+        file genome from serial_genome
+        
+        shell:
+        '''
+        echo ${genome}
+        '''
+}
