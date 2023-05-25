@@ -35,8 +35,6 @@ if (params.serial_genome){
     }
 }
     
-chr_sizes = file(params.chr_sizes)
-
 if (params.chr_sizes){
       chr_sizes = file(params.chr_sizes)
 }else{      
