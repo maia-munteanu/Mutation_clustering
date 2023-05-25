@@ -61,10 +61,7 @@ process parse_vcfs {
        tuple val(sample), file(sv), file(snv) from pairs_list
        path mappability
        path chr_sizes
-       
-       output:
-       tuple val(sample), file(snv), file("!{sample}.snv.filt.vcf.gz"), file("!{sample}.sv.ann.txt") into tests
-       
+         
        shell:
        '''  
        svname=$(bcftools query -l !{sv} | sed -n 2p)
