@@ -73,8 +73,8 @@ process parse_vcfs {
        bcftools view -s $svname -f 'PASS' --regions-file !{mappability} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
        bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.bed
        
-       bedtools slop -i !{sample}.sv.bed -g !{chr_sizes} -b ${params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > !{sample}.closer.bed
-       bedtools slop -i !{sample}.sv.bed -g !{chr_sizes} -b ${params.close_value} > !{sample}.cluster.bed
+       bedtools slop -i !{sample}.sv.bed -g !{chr_sizes} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > !{sample}.closer.bed
+       bedtools slop -i !{sample}.sv.bed -g !{chr_sizes} -b !{params.close_value} > !{sample}.cluster.bed
        bedtools complement -i !{sample}.cluster.bed -g !{chr_sizes} | sort -k1,1 -k2,2n | bedtools merge > !{sample}.unclustered.bed
        bedtools subtract -a !{sample}.cluster.bed -b !{sample}.closer.bed | sort -k1,1 -k2,2n | bedtools merge > !{sample}.close.bed             
        [ -s !{sample}.closer.bed  ] && echo "Closer file not empty" || echo -e '1\t0\t1' >> !{sample}.closer.bed 
