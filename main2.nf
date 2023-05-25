@@ -57,9 +57,8 @@ pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(h
                    
                    
 process parse_vcfs {
-
-
-
-
-
-}
+       input:
+       tuple val(sample), path(sv), path(snv) from pairs_list
+       path hg19
+       path CRG75
+       path fasta_ref
