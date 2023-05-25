@@ -16,7 +16,7 @@ params.assembly = "hg19"
 params.serial_genome = null
 params.chr_sizes = null
 
-reference = path(params.reference)
+reference = path params.reference
 mappability = file(params.mappability)
 
 if (params.serial_genome){
