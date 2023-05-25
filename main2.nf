@@ -21,11 +21,10 @@ CRG75 = file(params.CRG75)
 process serialize_genome {
     container = '/home/mmunteanu/Randommut.img'
     input: 
-    reference
-    file "${params.assembly}.fa" from genome
+    file "${params.assembly}.fa" from reference
 
     output:
-    file "!{reference}.p" into serial_genome
+    file "${params.assembly}.fa.p" into serial_genome
 
     """
     randommut -M serialize -g !{reference} -a !{assembly}
