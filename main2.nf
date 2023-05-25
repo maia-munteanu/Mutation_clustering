@@ -63,7 +63,7 @@ process parse_vcfs {
        path chr_sizes
        
        output:
-       set val(sample), file("!{sample}.snv.tsv") into snvs_to_randomise
+       set val(sample), file("${sample}.snv.tsv") into snvs_to_randomise
          
        shell:
        '''  
