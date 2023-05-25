@@ -93,13 +93,3 @@ process parse_vcfs {
        
 }
 
-process test {
-      input:
-      tuple val(sample), file(snv), file("*.snv.filt.vcf.gz"), file("*.sv.ann.txt") from tests
-      
-      shell:
-      ''' 
-      ls -lt 
-      '''
-
-}
