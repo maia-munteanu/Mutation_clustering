@@ -27,6 +27,6 @@ process serialize_genome {
     file "${params.assembly}.fa.p" into serial_genome
 
     """
-    randommut -M serialize -g !{reference} -a !{assembly}
+    randommut -M serialize -g ${params.assembly}.fa -a ${params.assembly}
     """
 }
