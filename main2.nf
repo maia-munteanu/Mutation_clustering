@@ -52,15 +52,18 @@ if (params.chr_sizes){
     }
 }
 
-pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
+samples_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
                    
                    
 process parse_vcfs {
        input:
-       tuple val(sample), file(sv), file(snv) from pairs_list
+       tuple val(sample), file(sv), file(snv) from samples_list
        path mappability
        path chr_sizes
+       
+       output:
+       set val(sample), file("!{sample}.snv.tsv") into snvs_to_randomise
          
        shell:
        '''  
@@ -85,8 +88,21 @@ process parse_vcfs {
        tabix -p vcf !{snv}
        bcftools view -s $snvname -f 'PASS' --types snps --regions-file !{mappability} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
        tabix -p vcf !{sample}.snv.filt.vcf.gz
+       bcftools query -f '%CHROM\t%POS\t%POS\t%REF\t%ALT{0}\t1\t!{sample}\n' !{sample}.snv.filt.vcf.gz > "!{sample}.snv.tsv"
        
        '''
        
 }
 
+
+process randomise_snvs {
+       input:
+       serial_genome
+       set val(sample), file(snv_tsv) from snvs_to_randomise
+       
+       shell:
+       '''
+       randommut -M randomize -g !{serial_genome} -m !{snv_tsv} -o !{sample}.snv.random.tsv -t 10 -w 1000000 -b 10000
+       '''
+
+}
