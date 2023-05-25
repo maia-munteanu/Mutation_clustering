@@ -4,6 +4,7 @@
 
 // Copyright (C) 2022 IRB Barcelona
 
+// example run: nextflow run ../nextflow_pipeline/Mutation_clustering/main2.nf --serial_genome /g/strcombio/fsupek_cancer1/SV_clusters_project/Test/hg19.fa.p --chr_sizes /g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.genome
 
 params.closer_value = 2000
 params.close_value = 10000
