@@ -9,14 +9,14 @@ params.closer_value = 2000
 params.close_value = 10000
 params.input_file = "/g/strcombio/fsupek_cancer1/SV_clusters_project/input.csv"
 params.output_folder = "/g/strcombio/fsupek_cancer1/SV_clusters_project/Main2Results"
+params.CRG75 = "/home/mmunteanu/reference/CRG75_nochr.bed"
+
 params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
 params.assembly = "hg19"
-params.chr_sizes = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.genome"
-params.CRG75 = "/home/mmunteanu/reference/CRG75_nochr.bed"
 params.serial_genome = null
+params.chr_sizes = null
 
 reference = file(params.reference)
-chr_sizes = file(params.chr_sizes)
 CRG75 = file(params.CRG75)
 
 if (params.serial_genome){
@@ -35,12 +35,21 @@ if (params.serial_genome){
     }
 }
     
-process test {
+chr_sizes = file(params.chr_sizes)
+
+if (params.chr_sizes){
+      chr_sizes = file(params.chr_sizes)
+}else{      
+    process get_chr_sizes {
         input: 
-        file serial_genome
-        
-        shell:
-        '''
-        echo !{serial_genome}
-        '''
+        file "${params.assembly}.fa" from reference
+
+        output:
+        file "${params.assembly}.genome" into chr_sizes
+
+        """
+        samtools faidx ${params.assembly}.fa
+        head -n 24 ${params.assembly}.fa.fai | cut -f1,2  > ${params.assembly}.genome
+        """
+    }
 }
