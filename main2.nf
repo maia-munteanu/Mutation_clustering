@@ -52,15 +52,15 @@ if (params.chr_sizes){
     }
 }
 
-pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
+// pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
                    
                    
-process parse_vcfs {
-       input:
-       tuple val(sample), path(sv), path(snv) from pairs_list
-       path hg19
-       path CRG75
-       path fasta_ref
-       
-}
+// process parse_vcfs {
+//       input:
+ //      tuple val(sample), path(sv), path(snv) from pairs_list
+ //      path hg19
+ //      path CRG75
+ //      path fasta_ref
+ //      
+// }
