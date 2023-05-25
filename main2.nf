@@ -16,7 +16,7 @@ params.assembly = "hg19"
 params.serial_genome = null
 params.chr_sizes = null
 
-reference = file(params.reference)
+reference = path(params.reference)
 mappability = file(params.mappability)
 
 if (params.serial_genome){
@@ -62,3 +62,5 @@ process parse_vcfs {
        path hg19
        path CRG75
        path fasta_ref
+       
+}
