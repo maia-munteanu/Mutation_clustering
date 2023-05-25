@@ -58,12 +58,12 @@ pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(h
                    
 process parse_vcfs {
        input:
-       tuple val(sample), path(sv), path(snv) from pairs_list
+       tuple val(sample), file(sv), file(snv) from pairs_list
        path mappability
        path chr_sizes
        
        output:
-       tuple val(sample), path(snv), path *.snv.filt.vcf.gz, path *.sv.ann.txt into tests
+       tuple val(sample), file(snv), file(*.snv.filt.vcf.gz), file(*.sv.ann.txt) into tests
        
        shell:
        '''  
@@ -95,7 +95,7 @@ process parse_vcfs {
 
 process test {
       input:
-      tuple val(sample), path(snv), path *.snv.filt.vcf.gz, path *.sv.ann.txt from tests
+      tuple val(sample), file(snv), file(*.snv.filt.vcf.gz), file(*.sv.ann.txt) from tests
       
       shell:
       ''' 
