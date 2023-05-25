@@ -10,27 +10,26 @@ params.close_value = 10000
 params.input_file = "/g/strcombio/fsupek_cancer1/SV_clusters_project/input.csv"
 params.output_folder = "/g/strcombio/fsupek_cancer1/SV_clusters_project/New_pipe_results"
 params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
-params.hg19 = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.genome"
+params.assembly = "hg19"
+params.chr_sizes = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.genome"
 params.CRG75 = "/home/mmunteanu/reference/CRG75_nochr.bed"
 
 close_bp = params.close_value
 closer_bp = params.closer_value
-fasta_ref = file(params.fasta_ref)
-hg19 = file(params.hg19)
+reference = file(params.reference)
+assembly = params.assembly
+chr_sizes = file(params.chr_sizes)
 CRG75 = file(params.CRG75)
 
 process serialize_genome {
     container = '/home/mmunteanu/Randommut.img'
     input: 
-    fasta_ref
+    reference
 
     output:
-    file "!{fasta_ref}.p" into serial_genome
+    file "!{reference}.p" into serial_genome
 
     """
-    python -m randommut -M serialize -g ${params.assembly}.fa -a ${params.assembly}
-    
-    randommut -M serialize -g ../hg19.fasta -a hg19
-    
+    randommut -M serialize -g !{reference} -a !{assembly}
     """
 }
