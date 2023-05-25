@@ -18,3 +18,21 @@ closer_bp = params.closer_value
 fasta_ref = file(params.fasta_ref)
 hg19 = file(params.hg19)
 CRG75 = file(params.CRG75)
+
+process serialize_genome {
+    publishDir "TMP/"
+    conda '/g/strcombio/fsupek_home/dmas/ENV/py36'
+    afterScript 'set +u; conda deactivate'
+    input:
+    file "${params.assembly}.fa" from genome
+
+    output:
+    file "${params.assembly}.fa.p" into serial_genome
+    file "available_chromosomes.txt" into available_chromosomes
+
+    """
+    python -m randommut -M serialize -g ${params.assembly}.fa -a ${params.assembly}
+
+    egrep ">" ${params.assembly}.fa | sed 's/>//' > available_chromosomes.txt
+    """
+}
