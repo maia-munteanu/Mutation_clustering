@@ -63,7 +63,7 @@ process parse_vcfs {
        path chr_sizes
        
        output:
-       tuple val(sample), path(snv), path(*.snv.filt.vcf.gz), path(*.sv.ann.txt) into tests
+       tuple val(sample), path(snv), path *.snv.filt.vcf.gz, path *.sv.ann.txt into tests
        
        shell:
        '''  
@@ -95,7 +95,7 @@ process parse_vcfs {
 
 process test {
       input:
-      tuple val(sample), path(snv), path(*.snv.filt.vcf.gz), path(*.sv.ann.txt) from tests
+      tuple val(sample), path(snv), path *.snv.filt.vcf.gz, path *.sv.ann.txt from tests
       
       shell:
       ''' 
