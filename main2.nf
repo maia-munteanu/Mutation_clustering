@@ -39,8 +39,6 @@ if (params.chr_sizes){
       chr_sizes = file(params.chr_sizes)
 }else{      
     process get_chr_sizes {
-        container = 'https://github.com/nextflow-hub/samtools'
-        
         input: 
         file "${params.assembly}.fa" from reference
 
