@@ -52,15 +52,39 @@ if (params.chr_sizes){
     }
 }
 
-// pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-//                   .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
+pairs_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
+                   .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
                    
                    
-// process parse_vcfs {
-//       input:
- //      tuple val(sample), path(sv), path(snv) from pairs_list
- //      path hg19
- //      path CRG75
- //      path fasta_ref
- //      
-// }
+process parse_vcfs {
+       input:
+       tuple val(sample), path(sv), path(snv) from pairs_list
+       path mappability
+       path chr_sizes
+       path fasta_ref
+       
+       shell:
+       '''  
+       svname=$(bcftools query -l !{sv} | sed -n 2p)
+       snvname=$(bcftools query -l !{snv} | sed -n 2p)
+       
+       Rscript !{baseDir}/simple-event-annotation.R !{sv} !{sample}
+       bcftools sort -Oz !{sample}.sv.ann.vcf > !{sample}.sv.ann.vcf.gz
+       tabix -p vcf !{sample}.sv.ann.vcf.gz
+       bcftools view -s $svname -f 'PASS' --regions-file !{CRG75} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
+       bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.bed
+       
+       bedtools slop -i !{sample}.sv.bed -g !{hg19} -b !{closer_bp} | sort -k1,1 -k2,2n | bedtools merge > !{sample}.closer.bed
+       bedtools slop -i !{sample}.sv.bed -g !{hg19} -b !{close_bp} > !{sample}.cluster.bed
+       bedtools complement -i !{sample}.cluster.bed -g !{hg19} | sort -k1,1 -k2,2n | bedtools merge > !{sample}.unclustered.bed
+       bedtools subtract -a !{sample}.cluster.bed -b !{sample}.closer.bed | sort -k1,1 -k2,2n | bedtools merge > !{sample}.close.bed             
+       [ -s !{sample}.closer.bed  ] && echo "Closer file not empty" || echo -e '1\t0\t1' >> !{sample}.closer.bed 
+       [ -s !{sample}.close.bed  ] && echo "Close file not empty" || echo -e '1\t0\t1' >> !{sample}.close.bed 
+       
+       tabix -p vcf !{snv}
+       bcftools view -s $snvname -f 'PASS' --types snps --regions-file !{CRG75} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
+       tabix -p vcf !{sample}.snv.filt.vcf.gz
+       
+       '''
+       
+}
