@@ -102,7 +102,7 @@ process randomise_snvs {
        
        shell:
        '''
-       randommut -M randomize -g !{serial_genome} -m !{snv_tsv} -o !{sample}.snv.random.tsv -t 10 -w 1000000 -b 10000
+       randommut -M randomize -g !{serial_genome} -m !{snv_tsv} -o !{sample}.snv.random.tsv -t 1 -w 1000000 -b 5000
        '''
 
 }
