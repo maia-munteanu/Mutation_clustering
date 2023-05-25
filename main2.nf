@@ -24,10 +24,10 @@ if (params.serial_genome){
 }else{      
     process serialize_genome {
         input: 
-        file "${params.assembly}.fa" from reference
+        path "${params.assembly}.fa" from reference
 
         output:
-        file "${params.assembly}.fa.p" into serial_genome
+        path "${params.assembly}.fa.p" into serial_genome
 
         """
         randommut -M serialize -g ${params.assembly}.fa -a ${params.assembly}
@@ -40,10 +40,10 @@ if (params.chr_sizes){
 }else{      
     process get_chr_sizes {
         input: 
-        file "${params.assembly}.fa" from reference
+        path "${params.assembly}.fa" from reference
 
         output:
-        file "${params.assembly}.genome" into chr_sizes
+        path "${params.assembly}.genome" into chr_sizes
 
         """
         samtools faidx ${params.assembly}.fa
