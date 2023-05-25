@@ -71,14 +71,15 @@ process parse_vcfs {
        bcftools sort -Oz !{sample}.sv.ann.vcf > !{sample}.sv.ann.vcf.gz
        tabix -p vcf !{sample}.sv.ann.vcf.gz
        bcftools view -s $svname -f 'PASS' --regions-file !{mappability} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
-       bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.bed
+       bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
+       bcftools query -f '%CHROM\t%POS\t%SVLEN\t%SIMPLE_TYPE\n' !{sample}.sv.ann.filt.vcf.gz > sv.ann.txt
        
-       bedtools slop -i !{sample}.sv.bed -g !{chr_sizes} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > !{sample}.closer.bed
-       bedtools slop -i !{sample}.sv.bed -g !{chr_sizes} -b !{params.close_value} > !{sample}.cluster.bed
-       bedtools complement -i !{sample}.cluster.bed -g !{chr_sizes} | sort -k1,1 -k2,2n | bedtools merge > !{sample}.unclustered.bed
-       bedtools subtract -a !{sample}.cluster.bed -b !{sample}.closer.bed | sort -k1,1 -k2,2n | bedtools merge > !{sample}.close.bed             
-       [ -s !{sample}.closer.bed  ] && echo "Closer file not empty" || echo -e '1\t0\t1' >> !{sample}.closer.bed 
-       [ -s !{sample}.close.bed  ] && echo "Close file not empty" || echo -e '1\t0\t1' >> !{sample}.close.bed 
+       bedtools slop -i sv.bed -g !{chr_sizes} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > closer.bed
+       bedtools slop -i sv.bed -g !{chr_sizes} -b !{params.close_value} > cluster.bed
+       bedtools complement -i cluster.bed -g !{chr_sizes} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
+       bedtools subtract -a cluster.bed -b closer.bed | sort -k1,1 -k2,2n | bedtools merge > close.bed             
+       [ -s closer.bed  ] && echo "Closer file not empty" || echo -e '1\t0\t1' >> closer.bed 
+       [ -s close.bed  ] && echo "Close file not empty" || echo -e '1\t0\t1' >> close.bed 
        
        tabix -p vcf !{snv}
        bcftools view -s $snvname -f 'PASS' --types snps --regions-file !{mappability} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
