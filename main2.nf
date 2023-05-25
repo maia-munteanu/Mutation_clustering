@@ -63,7 +63,7 @@ process parse_vcfs {
        path chr_sizes
        
        output:
-       set val(sample), file("${sample}.snv.tsv") into snvs_to_randomise
+       set val(sample), file("${sample}.snv.filt.vcf.gz") into snvs_to_randomise
          
        shell:
        '''  
@@ -88,7 +88,7 @@ process parse_vcfs {
        tabix -p vcf !{snv}
        bcftools view -s $snvname -f 'PASS' --types snps --regions-file !{mappability} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
        tabix -p vcf !{sample}.snv.filt.vcf.gz
-       bcftools query -f '%CHROM\t%POS\t%POS\t%REF\t%ALT{0}\t1\t!{sample}\n' !{sample}.snv.filt.vcf.gz > "!{sample}.snv.tsv"
+       #bcftools query -f '%CHROM\t%POS\t%POS\t%REF\t%ALT{0}\t1\t!{sample}\n' !{sample}.snv.filt.vcf.gz > "!{sample}.snv.tsv"
        
        '''
        
@@ -98,11 +98,12 @@ process parse_vcfs {
 process randomise_snvs {
        input:
        serial_genome
-       set val(sample), file(snv_tsv) from snvs_to_randomise
+       set val(sample), file(snv2rand) from snvs_to_randomise
        
        shell:
        '''
-       randommut -M randomize -g !{serial_genome} -m !{snv_tsv} -o !{sample}.snv.random.tsv -t 1 -w 1000000 -b 5000
+       bcftools query -f '%CHROM\t%POS\t%POS\t%REF\t%ALT{0}\t1\tsampleA\n' !{snv2rand} > !{sample}.snv.tsv
+       randommut -M randomize -g !{serial_genome} -m !{sample}.snv.tsv -o !{sample}.random.snv.tsv -t 1 -w 1000000 -b 2500
        '''
 
 }
