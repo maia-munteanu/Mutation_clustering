@@ -13,20 +13,26 @@ params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
 params.assembly = "hg19"
 params.chr_sizes = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.genome"
 params.CRG75 = "/home/mmunteanu/reference/CRG75_nochr.bed"
+params.serial_genome = null
 
 reference = file(params.reference)
 chr_sizes = file(params.chr_sizes)
 CRG75 = file(params.CRG75)
 
-process serialize_genome {
-    container = '/home/mmunteanu/Randommut.img'
-    input: 
-    file "${params.assembly}.fa" from reference
+if (params.serial_genome){
+      serial_genome = file(params.serial_genome)
+}else{      
+    process serialize_genome {
+        container = '/home/mmunteanu/Randommut.img'
+        input: 
+        file "${params.assembly}.fa" from reference
 
-    output:
-    file "${params.assembly}.fa.p" into serial_genome
+        output:
+        file "${params.assembly}.fa.p" into serial_genome
 
-    """
-    randommut -M serialize -g ${params.assembly}.fa -a ${params.assembly}
-    """
+        """
+        randommut -M serialize -g ${params.assembly}.fa -a ${params.assembly}
+        """
+    }
 }
+    
