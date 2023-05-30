@@ -118,7 +118,7 @@ process test_outputs {
        
        shell:
        '''
-       echo $sample
-       echo $sample2
+       echo ${sample}
+       echo ${sample2}
        '''
 }     
