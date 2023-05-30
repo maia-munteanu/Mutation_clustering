@@ -55,7 +55,6 @@ if (params.chr_sizes){
 samples_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
                    
-                   
 process parse_vcfs {
        input:
        tuple val(sample), file(sv), file(snv) from samples_list
@@ -64,7 +63,8 @@ process parse_vcfs {
        
        output:
        set val(sample), file("${sample}.snv.filt.vcf.gz") into snvs_to_randomise
-         
+       set val(sample), file("${sample}.sv_snv.ann.bed"), file("${sample}.sv.ann.txt") into filter_by_sv_snv  
+      
        shell:
        '''  
        svname=$(bcftools query -l !{sv} | sed -n 2p)
@@ -81,6 +81,11 @@ process parse_vcfs {
        bedtools slop -i sv.bed -g !{chr_sizes} -b !{params.close_value} > cluster.bed
        bedtools complement -i cluster.bed -g !{chr_sizes} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
        bedtools subtract -a cluster.bed -b closer.bed | sort -k1,1 -k2,2n | bedtools merge > close.bed     
+       
+       awk -v OFS='\t' '{print $1,$2,$3,"CLOSER"}' closer.bed > closer.ann.bed
+       awk -v OFS='\t' '{print $1,$2,$3,"CLOSE"}' close.bed > close.ann.bed
+       awk -v OFS='\t' '{print $1,$2,$3,"UNCLUSTERED"}' unclustered.bed > unclustered.ann.bed
+       cat *ann.bed | sort -k 1,1 -k2,2n > !{sample}.sv_snv.ann.bed
        
        tabix -p vcf !{snv}
        bcftools view -s $snvname -f 'PASS' --types snps --regions-file !{mappability} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
@@ -101,5 +106,4 @@ errorStrategy 'retry'
        bcftools query -f '%CHROM\t%POS\t%POS\t%REF\t%ALT{0}\t1\tsampleA\n' !{snv2rand} > !{sample}.snv.tsv
        randommut -M randomize -g !{serial_genome} -m !{sample}.snv.tsv -o !{sample}.random.snv.tsv -t 1 -w 1000000 -b 2500
        '''
-
 }
