@@ -102,7 +102,7 @@ errorStrategy 'retry'
        tuple val(sample), file(snv2rand) from snvs_to_randomise
       
        output:
-       tuple val(sample), file("${sample}.snv.filt.vcf.gz"), file("${sample}.random.snv.tsv") into randomised_vcfs 
+       tuple val(sample), file("${sample}.snv.filt.vcf.gz"), file("${sample}.random.snv.tsv") into randomised_snvs 
        
        shell:
        '''
@@ -111,14 +111,18 @@ errorStrategy 'retry'
        '''
 }
 
-process test_outputs {
-       input:
-       tuple val(sample), file(observed), file(randomised) from randomised_vcfs
-       tuple val(sample2), file(bed), file(txt) from filter_by_sv_snv 
+left  = Channel.of(filter_by_sv_snv)
+right = Channel.of(randomised_snvs)
+left.join(right).view()
+
+//process test_outputs {
+//       input:
+//       tuple val(sample), file(observed), file(randomised) from randomised_vcfs
+//       tuple val(sample2), file(bed), file(txt) from filter_by_sv_snv 
        
-       shell:
-       '''
-       echo !{sample}
-       echo !{sample2}
-       '''
-}     
+//       shell:
+//       '''
+//       echo !{sample}
+ //      echo !{sample2}
+//       '''
+//}     
