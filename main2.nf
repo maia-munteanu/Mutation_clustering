@@ -8,7 +8,7 @@
 
 params.closer_value = 2000
 params.close_value = 10000
-params.input_file = "/g/strcombio/fsupek_cancer1/SV_clusters_project/input.csv"
+params.input_file = "/g/strcombio/fsupek_cancer1/SV_clusters_project/input2.csv"
 params.output_folder = "/g/strcombio/fsupek_cancer1/SV_clusters_project/Main2Results"
 params.mappability = "/home/mmunteanu/reference/CRG75_nochr.bed"
 params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
