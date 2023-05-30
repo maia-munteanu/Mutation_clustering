@@ -111,18 +111,17 @@ errorStrategy 'retry'
        '''
 }
 
-left  = Channel.of(filter_by_sv_snv)
-right = Channel.of(randomised_snvs)
-left.join(right).view()
+left  = Channel.from(filter_by_sv_snv)
+right = Channel.from(randomised_snvs)
+new_list = left.join(right).view()
 
-//process test_outputs {
-//       input:
-//       tuple val(sample), file(observed), file(randomised) from randomised_vcfs
-//       tuple val(sample2), file(bed), file(txt) from filter_by_sv_snv 
+process test_outputs {
+       input:
+       tuple val(sample2), file(bed), file(txt), file(observed), file(randomised)  from new_list 
        
-//       shell:
-//       '''
-//       echo !{sample}
- //      echo !{sample2}
-//       '''
-//}     
+       shell:
+       '''
+       echo !{sample}
+       echo !{bed}
+      '''
+}     
