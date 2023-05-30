@@ -82,16 +82,11 @@ process parse_vcfs {
        bedtools complement -i cluster.bed -g !{chr_sizes} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
        bedtools subtract -a cluster.bed -b closer.bed | sort -k1,1 -k2,2n | bedtools merge > close.bed     
        
-       [ -s closer.bed  ] && echo "Closer file not empty" || echo -e '1\t0\t1' >> closer.bed 
-       [ -s close.bed  ] && echo "Close file not empty" || echo -e '1\t0\t1' >> close.bed 
-       
        tabix -p vcf !{snv}
        bcftools view -s $snvname -f 'PASS' --types snps --regions-file !{mappability} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
        tabix -p vcf !{sample}.snv.filt.vcf.gz       
        '''
-       
 }
-
 
 process randomise_snvs {
        errorStrategy 'retry'
