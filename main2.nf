@@ -52,23 +52,40 @@ if (params.chr_sizes){
     }
 }
 
-samples_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-                   .map{ row -> [ row.sample, file(row.sv), file(row.snv) ] }.view()
-                   
-process parse_vcfs {
+snv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
+                   .map{ row -> [ row.sample, file(row.snv) ] }.view()
+sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
+                   .map{ row -> [ row.sample, file(row.sv) ] }.view()
+
+process parse_snvs {
        input:
-       tuple val(sample), file(sv), file(snv) from samples_list
+       tuple val(sample), file(snv) from snv_list
+       path mappability
+       
+       output:
+       tuple val(sample), file("${sample}.snv.filt.vcf.gz") into snvs_to_randomise
+      
+       shell:
+       '''  
+       snvname=$(bcftools query -l !{snv} | sed -n 2p)
+       tabix -p vcf !{snv}
+       bcftools view -s $snvname -f 'PASS' --types snps --regions-file !{mappability} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
+       tabix -p vcf !{sample}.snv.filt.vcf.gz       
+       '''
+}
+
+process parse_svs {
+       input:
+       tuple val(sample), file(sv) from sv_list
        path mappability
        path chr_sizes
        
        output:
-       tuple val(sample), file("${sample}.snv.filt.vcf.gz") into snvs_to_randomise
        tuple val(sample), file("${sample}.sv_snv.ann.bed"), file("${sample}.sv.ann.txt") into filter_by_sv_snv  
       
        shell:
        '''  
        svname=$(bcftools query -l !{sv} | sed -n 2p)
-       snvname=$(bcftools query -l !{snv} | sed -n 2p)
        
        Rscript !{baseDir}/simple-event-annotation.R !{sv} !{sample}
        bcftools sort -Oz !{sample}.sv.ann.vcf > !{sample}.sv.ann.vcf.gz
@@ -85,11 +102,7 @@ process parse_vcfs {
        awk -v OFS='\t' '{print $1,$2,$3,"CLOSER"}' closer.bed > closer.ann.bed
        awk -v OFS='\t' '{print $1,$2,$3,"CLOSE"}' close.bed > close.ann.bed
        awk -v OFS='\t' '{print $1,$2,$3,"UNCLUSTERED"}' unclustered.bed > unclustered.ann.bed
-       cat *ann.bed | sort -k 1,1 -k2,2n > !{sample}.sv_snv.ann.bed
-       
-       tabix -p vcf !{snv}
-       bcftools view -s $snvname -f 'PASS' --types snps --regions-file !{mappability} !{snv} | bcftools sort -Oz > !{sample}.snv.filt.vcf.gz
-       tabix -p vcf !{sample}.snv.filt.vcf.gz       
+       cat *ann.bed | sort -k 1,1 -k2,2n > !{sample}.sv_snv.ann.bed 
        '''
 }
 
@@ -111,8 +124,6 @@ errorStrategy 'retry'
        '''
 }
 
-//left  = Channel.from(filter_by_sv_snv)
-//right = Channel.from(randomised_snvs)
 new_list = filter_by_sv_snv.join(randomised_snvs).view()
 
 process test_outputs {
