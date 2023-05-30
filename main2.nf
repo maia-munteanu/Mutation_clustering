@@ -62,8 +62,8 @@ process parse_vcfs {
        path chr_sizes
        
        output:
-       set val(sample), file("${sample}.snv.filt.vcf.gz") into snvs_to_randomise
-       set val(sample), file("${sample}.sv_snv.ann.bed"), file("${sample}.sv.ann.txt") into filter_by_sv_snv  
+       tuple val(sample), file("${sample}.snv.filt.vcf.gz") into snvs_to_randomise
+       tuple val(sample), file("${sample}.sv_snv.ann.bed"), file("${sample}.sv.ann.txt") into filter_by_sv_snv  
       
        shell:
        '''  
@@ -99,7 +99,10 @@ errorStrategy 'retry'
       
        input:
        serial_genome
-       set val(sample), file(snv2rand) from snvs_to_randomise
+       tuple val(sample), file(snv2rand) from snvs_to_randomise
+      
+       output:
+       tuple val(sample), file("${sample}.snv.filt.vcf.gz"), file("${sample}.random.snv.tsv") into randomised_vcfs 
        
        shell:
        '''
@@ -107,3 +110,15 @@ errorStrategy 'retry'
        randommut -M randomize -g !{serial_genome} -m !{sample}.snv.tsv -o !{sample}.random.snv.tsv -t 1 -w 1000000 -b 2500
        '''
 }
+
+process test_outputs {
+       input:
+       tuple val(sample), file(observed), file(randomised) from randomised_vcfs
+       tuple val(sample2), file(bed), file(txt) from filter_by_sv_snv 
+       
+       shell:
+       '''
+       echo $sample
+       echo $sample2
+       '''
+}     
