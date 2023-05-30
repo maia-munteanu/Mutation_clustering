@@ -111,13 +111,13 @@ errorStrategy 'retry'
        '''
 }
 
-left  = Channel.from(filter_by_sv_snv)
-right = Channel.from(randomised_snvs)
-new_list = left.join(right).view()
+//left  = Channel.from(filter_by_sv_snv)
+//right = Channel.from(randomised_snvs)
+new_list = filter_by_sv_snv.join(randomised_snvs).view()
 
 process test_outputs {
        input:
-       tuple val(sample2), file(bed), file(txt), file(observed), file(randomised)  from new_list 
+       tuple val(sample), file(bed), file(txt), file(observed), file(randomised)  from new_list 
        
        shell:
        '''
