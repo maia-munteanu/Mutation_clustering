@@ -85,8 +85,12 @@ process parse_svs {
       
        shell:
        '''  
-       svname=$(bcftools query -l !{sv} | sed -n 2p)
+       sv_no=$(bcftools query -f "%CHROM\n" !{sv} | wc -l)
        
+       if [ $sv_no > 15 ]
+       then
+       
+       svname=$(bcftools query -l !{sv} | sed -n 2p)
        Rscript !{baseDir}/simple-event-annotation.R !{sv} !{sample}
        bcftools sort -Oz !{sample}.sv.ann.vcf > !{sample}.sv.ann.vcf.gz
        tabix -p vcf !{sample}.sv.ann.vcf.gz
@@ -103,6 +107,8 @@ process parse_svs {
        awk -v OFS='\t' '{print $1,$2,$3,"CLOSE"}' close.bed > close.ann.bed
        awk -v OFS='\t' '{print $1,$2,$3,"UNCLUSTERED"}' unclustered.bed > unclustered.ann.bed
        cat *ann.bed | sort -k 1,1 -k2,2n > !{sample}.sv_snv.ann.bed 
+       
+       fi
        '''
 }
 
