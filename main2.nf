@@ -94,6 +94,9 @@ process parse_vcfs {
 
 
 process randomise_snvs {
+       errorStrategy 'retry'
+       memory { 30GB * task.attempt }
+      
        input:
        serial_genome
        set val(sample), file(snv2rand) from snvs_to_randomise
