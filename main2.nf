@@ -89,8 +89,8 @@ process parse_vcfs {
 }
 
 process randomise_snvs {
-       errorStrategy 'retry'
-       memory { 30GB * task.attempt }
+errorStrategy 'retry'
+       memory { 30.GB * task.attempt }
       
        input:
        serial_genome
