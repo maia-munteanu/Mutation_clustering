@@ -130,13 +130,13 @@ errorStrategy 'retry'
 
 new_list = filter_by_sv_snv.join(randomised_snvs).view()
 
-process test_outputs {
-       input:
-       tuple val(sample), file(bed), file(txt), file(observed), file(randomised)  from new_list 
-       
-       shell:
-       '''
-       echo !{sample}
-       echo !{bed}
-      '''
-}     
+//process test_outputs {
+//       input:
+//       tuple val(sample), file(bed), file(txt), file(observed), file(randomised)  from new_list 
+//       
+//       shell:
+//       '''
+//       echo !{sample}
+//       echo !{bed}
+//      '''
+//}     
