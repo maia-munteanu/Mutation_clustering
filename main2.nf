@@ -130,7 +130,7 @@ errorStrategy 'retry'
        '''
 }
 
-new_list = filter_by_sv_snv.join(randomised_snvs).view()
+new_list = filter_by_sv_snv.join(randomised_vcf).view()
 
 //process test_outputs {
 //       input:
