@@ -8,6 +8,9 @@
 
 params.closer_value = 2000
 params.close_value = 10000
+params.random_window = 1000000
+params.random_iter = 5
+params.random_batch = 2500
 params.input_file = "/g/strcombio/fsupek_cancer1/SV_clusters_project/input2.csv"
 params.output_folder = "/g/strcombio/fsupek_cancer1/SV_clusters_project/Main2Results"
 params.mappability = "/home/mmunteanu/reference/CRG75_nochr.bed"
@@ -118,8 +121,10 @@ errorStrategy 'retry'
        
        shell:
        '''
-       bcftools query -f '%CHROM\t%POS\t%POS\t%REF\t%ALT{0}\t1\tsampleA\n' !{snv2rand} > !{sample}.snv.tsv
-       randommut -M randomize -g !{serial_genome} -m !{sample}.snv.tsv -o !{sample}.random.snv.tsv -t 1 -w 1000000 -b 2500
+       bcftools query -f '%CHROM\t%POS\t%POS\t%REF\t%ALT{0}\t1\tsampleA\n' !{snv2rand} > !{sample}.snv.filt.tsv
+       randommut -M randomize -g !{serial_genome} -m !{sample}.snv.filt.tsv -o !{sample}.snv.filt.random.R!{params.random_iter}.tsv -t !{params.random_iter} -w !{params.random_window} -b !{params.random_batch}
+       
+       
        '''
 }
 
