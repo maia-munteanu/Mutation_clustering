@@ -65,7 +65,7 @@ process parse_svs {
        path chr_sizes
        
        output:
-       tuple val(sample), val(nonzero) into gotsvs
+             tuple val(sample), val(${nonzero}) into gotsvs
        tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into filter_by_sv_snv
        tuple val(sample), file("${sample}.sv.ann.txt"), optional: true into annotate_with_sv_info
       
