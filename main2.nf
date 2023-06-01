@@ -144,7 +144,6 @@ errorStrategy 'retry'
        '''
        clustmut distance -i . --glob !{tsv} -o !{sample} -Vltvu
        '''
-      
 }
 
 
@@ -152,13 +151,4 @@ errorStrategy 'retry'
 
 new_list = filter_by_sv_snv.join(randomised_vcf).view()
 
-//process test_outputs {
-//       input:
-//       tuple val(sample), file(bed), file(txt), file(observed), file(randomised)  from new_list 
-//       
-//       shell:
-//       '''
-//       echo !{sample}
-//       echo !{bed}
-//      '''
-//}     
+
