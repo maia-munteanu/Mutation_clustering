@@ -131,13 +131,16 @@ errorStrategy 'retry'
 }
 
 process get_snv_clusters {
-      input:
-      tuple val(sample), file(tsv) from randomised_tsv 
+       input:
+       tuple val(sample), file(tsv) from randomised_tsv 
       
-      output:
-      tuple val(sample), file(tsv) from randomised_tsv 
-            
-      
+       output:
+       tuple val(sample), file("${sample}_distance_mutlist.txt"), file("${sample}_distance_VRanges.rds"), file("${sample}_plot.pdf") from snv_clusters 
+       
+       shell:
+       '''
+       clustmut distance -i . --glob tsv -o !{sample} -N 1 -Vlv
+       '''
       
 }
 
