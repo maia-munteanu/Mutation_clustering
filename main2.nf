@@ -154,21 +154,26 @@ process get_snv_clusters {
 }
 
 //tuple val(sample), file("${sample}.sv_snv.ann.bed") into filter_by_sv_snv 
-//tuple val(sample), file("${sample}.snv.filt.vcf.gz"), file("${sample}.snv.filt.random*.vcf") into randomised_vcf
 
-//sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
+sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 
-//process get_sv_snv_clusters {
-//       input:
-//       tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
-//       
-//       output:
- //      output val(sample), val(filter)
+process get_sv_snv_clusters {
+       input:
+       tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
+       
+       output:
+       output val(sample), val(filter)
+             
+       shell:
+       '''
+       bgzip !{sample}.sv_snv.ann.bed
+       tabix -p bed !{sample}.sv_snv.ann.bed.gz
+       '''
+      
        
        
        
-//}
+}
 
-//new_list = filter_by_sv_snv.join(randomised_vcf).view()
 
 
