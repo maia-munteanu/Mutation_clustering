@@ -84,7 +84,8 @@ process parse_svs {
        path chr_sizes
        
        output:
-       tuple val(sample), file("${sample}.sv_snv.ann.bed"), file("${sample}.sv.ann.txt") into filter_by_sv_snv  
+       tuple val(sample), file("${sample}.sv_snv.ann.bed") into filter_by_sv_snv  
+       tuple val(sample), file("${sample}.sv.ann.txt") into annotate_with_sv_info 
       
        shell:
        '''  
@@ -136,7 +137,7 @@ process get_snv_clusters {
        tuple val(sample), file(tsv) from randomised_tsv 
       
        output:
-       tuple val(sample), file("${sample}_distance_VRanges.rds"), file("${sample}.snv.clusters.tsv") into snv_clusters 
+       tuple val(sample), file("${sample}.snv.clusters.tsv") into snv_clusters 
        
        shell:
        '''
@@ -145,9 +146,22 @@ process get_snv_clusters {
        '''
 }
 
+tuple val(sample), file("${sample}.sv_snv.ann.bed") into filter_by_sv_snv 
+tuple val(sample), file("${sample}.snv.filt.vcf.gz"), file("${sample}.snv.filt.random*.vcf") into randomised_vcf
 
+sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 
+process get_sv_snv_clusters {
+       input:
+       tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
+       
+       output:
+       output val(sample), val(filter)
+       
+       
+       
+}
 
-new_list = filter_by_sv_snv.join(randomised_vcf).view()
+//new_list = filter_by_sv_snv.join(randomised_vcf).view()
 
 
