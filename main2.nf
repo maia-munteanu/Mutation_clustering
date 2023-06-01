@@ -168,6 +168,8 @@ process get_sv_snv_clusters {
        '''
        bgzip !{sample}.sv_snv.ann.bed
        tabix -p bed !{sample}.sv_snv.ann.bed.gz
+       
+       echo [[annotation]] >> !{sample}.conf; echo file=\"!{sample}.sv_snv.ann.bed.gz\" >> !{sample}.conf; echo names=[\"SV-SNV\"] >> !{sample}.conf; echo columns=[4] >> !{sample}.conf; echo ops=[\"self\"] >> !{sample}.conf
        '''
       
        
