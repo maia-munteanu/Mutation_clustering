@@ -130,6 +130,15 @@ errorStrategy 'retry'
        '''
 }
 
+process get_clusters {
+      
+      
+      
+}
+
+
+
+
 new_list = filter_by_sv_snv.join(randomised_vcf).view()
 
 //process test_outputs {
