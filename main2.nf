@@ -153,7 +153,6 @@ process get_snv_clusters {
        '''
 }
 
-//tuple val(sample), file("${sample}.sv_snv.ann.bed") into filter_by_sv_snv 
 
 sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 
@@ -168,8 +167,10 @@ process get_sv_snv_clusters {
        '''
        bgzip !{sample}.sv_snv.ann.bed
        tabix -p bed !{sample}.sv_snv.ann.bed.gz
-       echo [[annotation]] >> !{sample}.conf; echo 'file=\"!{sample}.sv_snv.ann.bed.gz\"' >> !{sample}.conf; echo 'names=[\"SV-SNV\"]' >> !{sample}.conf; echo columns=[4] >> !{sample}.conf; echo 'ops=[\"self\"]' >> !{sample}.conf
        echo '[[annotation]] \n file=\"!{sample}.sv_snv.ann.bed.gz\" \n names=[\"SV-SNV\"] \n columns=[4] \n ops=[\"self\"]' >> !{sample}.conf
+       vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.sv_snv.vcf
+       vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.sv_snv.vcf.gz
+       
        '''
       
        
