@@ -65,13 +65,12 @@ process parse_svs {
        path chr_sizes
        
        output:
-       tuple val sample, val nonzero into gotsvs
+       tuple val(sample), val(nonzero) into gotsvs
        tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into filter_by_sv_snv
        tuple val(sample), file("${sample}.sv.ann.txt"), optional: true into annotate_with_sv_info
       
        shell:
        '''  
-       n0=$(zgrep -v "^#" !{sv} | wc -l)
        nonzero=true
        
        if [ $(zgrep -v "^#" !{sv} | wc -l) -gt 0 ]
@@ -85,9 +84,7 @@ process parse_svs {
               nonzero=false   
               exit
        fi        
-       
-       n1=$(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l)
-       
+           
        if [ $(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l) -gt 0 ] 
        then            
              bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
