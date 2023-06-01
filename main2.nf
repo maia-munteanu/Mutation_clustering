@@ -96,6 +96,9 @@ process parse_svs {
        '''
 }
 
+annotate_with_sv_info.view()
+
+
 snv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.snv) ] }.join(filter_by_sv_snv).view()
 
