@@ -142,7 +142,7 @@ errorStrategy 'retry'
        
        shell:
        '''
-       clustmut distance -i . --glob !{tsv} -o !{sample} -Vtvu
+       clustmut distance -i . --glob !{tsv} -o !{sample} -Vv
        '''
 }
 
