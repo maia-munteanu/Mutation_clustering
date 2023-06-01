@@ -71,7 +71,7 @@ process parse_svs {
       
        shell:
        '''  
-       nonzero=true
+       //nonzero=true
        
        if [ $(zgrep -v "^#" !{sv} | wc -l) -gt 0 ]
        then
