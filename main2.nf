@@ -83,7 +83,7 @@ process parse_svs {
               bcftools view -s $svname -f 'PASS' --regions-file !{mappability} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
        else
               nonzero=false   
-              break
+              exit
        fi        
        
        n1=$(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l)
