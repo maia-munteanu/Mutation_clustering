@@ -71,8 +71,8 @@ process parse_svs {
       
        shell:
        '''  
-       n0=$(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l)
-       nonzero=false
+       n0=$(zgrep -v "^#" !{sv} | wc -l)
+       nonzero=true
        
        if [ $n0 -gt 0 ]
        then
@@ -88,7 +88,7 @@ process parse_svs {
        
        n1=$(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l)
        
-       if [ $n1 -gt 0 ]
+       if [ $n1 -gt 0 ] && [ "$nonzero" = true ]
        then            
              bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
              bcftools query -f '%CHROM\t%POS\t%SVLEN\t%SIMPLE_TYPE\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.txt
