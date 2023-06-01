@@ -1,4 +1,4 @@
-library(tidyverse)
+library(readr)
 library(VariantAnnotation)
 args=commandArgs(TRUE)
 
