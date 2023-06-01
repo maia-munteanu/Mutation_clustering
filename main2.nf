@@ -168,8 +168,8 @@ process get_sv_snv_clusters {
        bgzip !{sample}.sv_snv.ann.bed
        tabix -p bed !{sample}.sv_snv.ann.bed.gz
        echo '[[annotation]] \n file=\"!{sample}.sv_snv.ann.bed.gz\" \n names=[\"SV-SNV\"] \n columns=[4] \n ops=[\"self\"]' >> !{sample}.conf
-       vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.sv_snv.vcf
-       vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.sv_snv.vcf.gz
+       vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
+       vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
        
        '''
       
