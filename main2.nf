@@ -138,7 +138,7 @@ errorStrategy 'retry'
        tuple val(sample), file(tsv) from randomised_tsv 
       
        output:
-       tuple val(sample), file("${sample}_distance_mutlist.txt"), file("${sample}_distance_VRanges.rds"), file("${sample}_plot.pdf") into snv_clusters 
+       tuple val(sample), file("${sample}_distance_VRanges.rds"), file("${sample}_plot.pdf") into snv_clusters 
        
        shell:
        '''
