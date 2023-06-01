@@ -65,24 +65,31 @@ process parse_svs {
        path chr_sizes
        
        output:
-       tuple val(sample), file("${sample}.sv_snv.ann.bed") into filter_by_sv_snv
-       tuple val(sample), file("${sample}.sv.ann.txt") into annotate_with_sv_info
-       //tuple val(sample), val(nonzero) into test
+       tuple val(sample), val(nonzero) into gotsvs
+       tuple val(sample), file("${sample}.sv_snv.ann.bed") into filter_by_sv_snv, optional: true
+       tuple val(sample), file("${sample}.sv.ann.txt") into annotate_with_sv_info, optional: true
       
        shell:
        '''  
-       svname=$(bcftools query -l !{sv} | sed -n 2p)
-       Rscript !{baseDir}/simple-event-annotation.R !{sv} !{sample}
-       bcftools sort -Oz !{sample}.sv.ann.vcf > !{sample}.sv.ann.vcf.gz
-       tabix -p vcf !{sample}.sv.ann.vcf.gz
-       bcftools view -s $svname -f 'PASS' --regions-file !{mappability} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
+       n0=$(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l)
+       nonzero=false
        
-       n=$(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l)
-       
-       if [ $n -gt 0 ]
+       if [ $n0 -gt 0 ]
        then
-             nonzero=true
-            
+              svname=$(bcftools query -l !{sv} | sed -n 2p)
+              Rscript !{baseDir}/simple-event-annotation.R !{sv} !{sample}
+              bcftools sort -Oz !{sample}.sv.ann.vcf > !{sample}.sv.ann.vcf.gz
+              tabix -p vcf !{sample}.sv.ann.vcf.gz
+              bcftools view -s $svname -f 'PASS' --regions-file !{mappability} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
+       else
+              nonzero=false   
+       fi        
+       
+       
+       n1=$(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l)
+       
+       if [ $n1 -gt 0 ]
+       then            
              bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
              bcftools query -f '%CHROM\t%POS\t%SVLEN\t%SIMPLE_TYPE\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.txt
 
@@ -90,13 +97,12 @@ process parse_svs {
              bedtools slop -i sv.bed -g !{chr_sizes} -b !{params.close_value} > cluster.bed
              bedtools complement -i cluster.bed -g !{chr_sizes} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
              bedtools subtract -a cluster.bed -b closer.bed | sort -k1,1 -k2,2n | bedtools merge > close.bed     
-
              awk -v OFS='\t' '{print $1,$2,$3,"CLOSER"}' closer.bed > closer.ann.bed
              awk -v OFS='\t' '{print $1,$2,$3,"CLOSE"}' close.bed > close.ann.bed
              awk -v OFS='\t' '{print $1,$2,$3,"UNCLUSTERED"}' unclustered.bed > unclustered.ann.bed
              cat *ann.bed | sort -k 1,1 -k2,2n > !{sample}.sv_snv.ann.bed 
        else
-             nonzero=true
+             nonzero=false
        fi
        '''
 }
