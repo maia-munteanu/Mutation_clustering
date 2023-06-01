@@ -138,11 +138,12 @@ errorStrategy 'retry'
        tuple val(sample), file(tsv) from randomised_tsv 
       
        output:
-       tuple val(sample), file("${sample}_distance_VRanges.rds"), file("${sample}_plot.pdf") into snv_clusters 
+       tuple val(sample), file("${sample}_distance_VRanges.rds"), file("${sample}.snv.clusters.tsv") into snv_clusters 
        
        shell:
        '''
        clustmut distance -i . --glob !{tsv} -o !{sample} -Vv
+       Rscript !{baseDir}/vranges_to_tsv.R !{sample} !{sample}_distance_VRanges.rds
        '''
 }
 
