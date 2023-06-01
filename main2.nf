@@ -65,7 +65,7 @@ process parse_svs {
        path chr_sizes
        
        output:
-       tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into filter_by_sv_snv
+       tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into into(svs_exist, filter_by_sv_snv) 
        tuple val(sample), file("${sample}.sv.ann.txt"), optional: true into annotate_with_sv_info
       
        shell:
@@ -96,11 +96,8 @@ process parse_svs {
        '''
 }
 
-annotate_with_sv_info.view()
-
-
 snv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-                   .map{ row -> [ row.sample, file(row.snv) ] }.join(filter_by_sv_snv).view()
+                   .map{ row -> [ row.sample, file(row.snv) ] }.join(svs_exist).view()
 
 process parse_snvs {
        input:
