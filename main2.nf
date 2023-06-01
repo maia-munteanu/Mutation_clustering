@@ -131,8 +131,8 @@ errorStrategy 'retry'
 }
 
 process get_snv_clusters {
-errorStrategy 'retry'
-       memory { 5.GB * task.attempt }
+//errorStrategy 'retry'
+//       memory { 5.GB * task.attempt }
       
        input:
        tuple val(sample), file(tsv) from randomised_tsv 
