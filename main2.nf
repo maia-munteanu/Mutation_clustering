@@ -158,8 +158,8 @@ process get_snv_clusters {
        '''
 }
 
-tuple val(sample), file("${sample}.sv_snv.ann.bed") into filter_by_sv_snv 
-tuple val(sample), file("${sample}.snv.filt.vcf.gz"), file("${sample}.snv.filt.random*.vcf") into randomised_vcf
+//tuple val(sample), file("${sample}.sv_snv.ann.bed") into filter_by_sv_snv 
+//tuple val(sample), file("${sample}.snv.filt.vcf.gz"), file("${sample}.snv.filt.random*.vcf") into randomised_vcf
 
 sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 
