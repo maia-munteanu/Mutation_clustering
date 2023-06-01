@@ -65,13 +65,13 @@ process parse_svs {
        path chr_sizes
        
        output:
-       tuple val(sample), val(nonzero) into gotsvs
+       val test into gotsvs
        tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into filter_by_sv_snv
        tuple val(sample), file("${sample}.sv.ann.txt"), optional: true into annotate_with_sv_info
       
        shell:
        '''  
-       !{nonzero}=true
+       test=true
        
        if [ $(zgrep -v "^#" !{sv} | wc -l) -gt 0 ]
        then
@@ -81,7 +81,7 @@ process parse_svs {
               tabix -p vcf !{sample}.sv.ann.vcf.gz
               bcftools view -s $svname -f 'PASS' --regions-file !{mappability} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
        else
-              !{nonzero}=false   
+              test=false   
               exit
        fi        
            
@@ -99,7 +99,7 @@ process parse_svs {
              awk -v OFS='\t' '{print $1,$2,$3,"UNCLUSTERED"}' unclustered.bed > unclustered.ann.bed
              cat *ann.bed | sort -k 1,1 -k2,2n > !{sample}.sv_snv.ann.bed 
        else
-             !{nonzero}=false
+             test=false
        fi
        '''
 }
