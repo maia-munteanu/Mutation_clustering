@@ -139,7 +139,7 @@ process get_snv_clusters {
        
        shell:
        '''
-       clustmut distance -i . --glob !{tsv} -o !{sample} -Vlwtvu
+       clustmut distance -i . --glob !{tsv} -o !{sample} -Vltvu
        '''
       
 }
