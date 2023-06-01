@@ -65,7 +65,7 @@ process parse_svs {
        path chr_sizes
        
        output:
-       env test into gotsvs
+       val test into gotsvs
        tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into filter_by_sv_snv
        tuple val(sample), file("${sample}.sv.ann.txt"), optional: true into annotate_with_sv_info
       
@@ -101,6 +101,8 @@ process parse_svs {
        else
              test=false
        fi
+       
+       echo $test
        '''
 }
 
