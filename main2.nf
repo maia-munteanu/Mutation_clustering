@@ -130,8 +130,13 @@ errorStrategy 'retry'
        '''
 }
 
-process get_clusters {
+process get_snv_clusters {
+      input:
+      tuple val(sample), file(tsv) from randomised_tsv 
       
+      output:
+      tuple val(sample), file(tsv) from randomised_tsv 
+            
       
       
 }
