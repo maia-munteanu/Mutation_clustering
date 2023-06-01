@@ -162,7 +162,7 @@ process get_sv_snv_clusters {
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
        
        output:
-       tuple val(sample)
+       tuple val(sample), file("${sample}.sv_snv.ann.bed.gz.tbi")
              
        shell:
        '''
