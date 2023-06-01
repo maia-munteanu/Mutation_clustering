@@ -162,7 +162,7 @@ process get_sv_snv_clusters {
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
        
        output:
-       tuple val(sample), val(filter)
+       tuple val(sample)
              
        shell:
        '''
