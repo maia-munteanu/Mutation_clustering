@@ -97,7 +97,7 @@ process parse_svs {
 }
 
 snv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-                   .map{ row -> [ row.sample, file(row.snv) ] }.join(svs_exist).map { sample, snv, bed -> sample, snv }.view()
+                   .map{ row -> [ row.sample, file(row.snv) ] }.join(svs_exist).map { row -> [ row.sample, file(row.snv) ] }.view()
 
 process parse_snvs {
        input:
