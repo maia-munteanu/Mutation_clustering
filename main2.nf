@@ -171,6 +171,11 @@ process get_sv_snv_clusters {
        vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
        
+       #start counting instances of CLOSE/R with grep -c SV-SNV=CLOSE
+       #then, if CLOSE/R = 0, reject observed sample
+       #then, calculate CLOSE/R / UNCL. for observed and CLOSE/R / UNCL. * !{params.random_iter}
+       # if random/observed >=20, reject observed sample
+       # all other observed samples can continue; we no longer need the randomised vcf
        '''
       
        
