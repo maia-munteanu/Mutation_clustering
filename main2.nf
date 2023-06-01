@@ -71,7 +71,7 @@ process parse_svs {
       
        shell:
        '''  
-       #nonzero=true
+       !{nonzero}=true
        
        if [ $(zgrep -v "^#" !{sv} | wc -l) -gt 0 ]
        then
@@ -81,7 +81,7 @@ process parse_svs {
               tabix -p vcf !{sample}.sv.ann.vcf.gz
               bcftools view -s $svname -f 'PASS' --regions-file !{mappability} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
        else
-              nonzero=false   
+              !{nonzero}=false   
               exit
        fi        
            
@@ -99,7 +99,7 @@ process parse_svs {
              awk -v OFS='\t' '{print $1,$2,$3,"UNCLUSTERED"}' unclustered.bed > unclustered.ann.bed
              cat *ann.bed | sort -k 1,1 -k2,2n > !{sample}.sv_snv.ann.bed 
        else
-             nonzero=false
+             !{nonzero}=false
        fi
        '''
 }
