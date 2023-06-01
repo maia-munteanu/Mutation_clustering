@@ -1,3 +1,4 @@
+library(VariantAnnotation)
 args=commandArgs(TRUE)
 
 sample=args[1]
