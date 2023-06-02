@@ -146,7 +146,7 @@ process get_sv_clusters {
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
       
        output:
-       tuple env(ratio), val(sample) optional: true into test
+       tuple env(ratio), val(sample), optional: true into test
  
        shell:
        '''
