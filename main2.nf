@@ -159,7 +159,7 @@ process get_sv_clusters {
        
        echo $ocloser; echo $oclose; echo $rcloser; echo $rclose;
        
-       if [ $ocloser -gt 0 ]; then echo 'Sample has SV-SNV clusters'; fi     
+       if [ $ocloser -gt 0 ]; then echo Sample has SV-SNV clusters; fi     
        ''' 
 }
 
