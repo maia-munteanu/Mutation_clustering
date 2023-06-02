@@ -158,13 +158,16 @@ process get_sv_clusters {
        rclose=$(grep -w SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf | wc -l)
        
        echo $ocloser; echo $oclose; echo $rcloser; echo $rclose
-       test=3
-       echo $test
-       if [[ $ocloser -gt 0 && $rcloser -gt 0 ]]
-       then
-       echo "The variable is greater than 10."
-       fi
 
+       if [[ $ocloser -gt 0 && $oclose -gt 0 ]]
+       then
+       echo "Sample has SV-SNV clusters"
+       ratio=$(echo "scale=3; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
+       echo "Ratio is $ratio"
+       else
+       echo "Sample does not have SV-SNV clusters"
+       fi
+       
        '''
 }
 
