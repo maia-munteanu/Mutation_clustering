@@ -159,8 +159,6 @@ process get_sv_clusters {
        
        echo $ocloser; echo $oclose; echo $rcloser; echo $rclose
        test=3
-       
-       if [ $test -gt 0 ]; then echo something; fi     
        ''' 
 }
 
