@@ -138,6 +138,24 @@ errorStrategy 'retry'
        '''
 }
 
+sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
+
+process get_sv_clusters {
+       input:
+       tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
+ 
+       shell:
+       '''
+       bgzip !{sample}.sv_snv.ann.bed
+       tabix -p bed !{sample}.sv_snv.ann.bed.gz
+       echo '[[annotation]] \n file=\"!{sample}.sv_snv.ann.bed.gz\" \n names=[\"SV-SNV\"] \n columns=[4] \n ops=[\"self\"]' >> !{sample}.conf
+       vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
+       vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
+       echo finished
+
+       ''' 
+}
+
 process get_snv_clusters {
       
        input:
@@ -154,46 +172,7 @@ process get_snv_clusters {
 }
 
 
-sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 
-process get_sv_clusters {
-       input:
-       tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
- 
-       shell:
-       '''
-       bgzip !{sample}.sv_snv.ann.bed
-       tabix -p bed !{sample}.sv_snv.ann.bed.gz
-       echo '[[annotation]] \n file=\"!{sample}.sv_snv.ann.bed.gz\" \n names=[\"SV-SNV\"] \n columns=[4] \n ops=[\"self\"]' >> !{sample}.conf
-       vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
-       vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
-       
-       ocloser=$(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
-       oclose=$(zgrep -wc SV-SNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz)
-       rcloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
-       rclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
-       
-       #echo ${ocloser}
-       echo $ocloser
-       
-       
-       #if [ ocloser -gt 0 ] && [ oclose -gt 0 ]
-       #then
-       #      echo Sample has SV-SNV clusters 
-       #      ratio=$(echo "scale=3; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
-       #      echo $ratio
-       #else
-       #      echo Sample does not have any SV-SNV clusters 
-       #fi     
-       
-       #if [ $(echo "$ratio > 0.2" | bc) ]
-       #then
-       #      echo "Sample has too many randomised SV-SNV clusters"
-       #else
-       #      echo "Sample passes all filters"   
-       #fi  
-       ''' 
-}
 
 
 
