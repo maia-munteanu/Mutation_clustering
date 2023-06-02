@@ -143,7 +143,10 @@ sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 
 process get_sv_snv_clusters {
        input:
-       tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
+       tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv
+      
+       output:
+       tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz") into annotate_snvs
 
        shell:
        '''
@@ -166,10 +169,10 @@ process get_sv_snv_clusters {
              then 
                    echo "Sample passes filters 1. SV-SNV are present and 2. below !{params.svsnv_threshold} randomised clusters."
              else
-                   echo "Sample passes filter 1. SV-SNV are present but fails filter 2. below !{params.svsnv_threshold} randomised clusters."
+                   echo "Sample passes filter 1. SV-SNV are present but fails filter 2. below !{params.svsnv_threshold} randomised clusters."; rm !{sample}.snv.filt.svsnv.vcf.gz
              fi
        else
-             echo "Sample does not have SV-SNV clusters"
+             echo "Sample does not have SV-SNV clusters"; rm !{sample}.snv.filt.svsnv.vcf.gz
        fi  
        '''
 }
