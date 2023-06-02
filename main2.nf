@@ -144,6 +144,9 @@ sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 process get_sv_clusters {
        input:
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
+      
+       output:
+       env(ratio), optional: true into test
  
        shell:
        '''
@@ -161,23 +164,20 @@ process get_sv_clusters {
 
        if [[ $ocloser -gt 0 && $oclose -gt 0 ]]
        then
-             echo "Sample has SV-SNV clusters (both closer and close)"
-             ratio=$(echo "scale=3; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
-             echo "Ratio is $ratio"
-             
+             ratio=$(echo "scale=3; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc); echo "Ratio is $ratio"
              if [[ $(echo "$ratio<=!{params.svsnv_threshold}" | bc) -eq 1 ]]
              then 
-                   echo "Sample has a low enough number of randomised SV-clustering SNVs compared to observed SV-SNVs (!{params.svsnv_threshold} threshold). This sample will continue to be processed. "
+                   echo "Sample passes filters 1. SV-SNV are present and 2. below !{params.svsnv_threshold} randomised clusters."
              else
-                   echo "Sample has too many randomised SV-clustering SNVs. It will not be analysed further."
+                   echo "Sample passes filter 1. SV-SNV are present but fails filter 2. below !{params.svsnv_threshold} randomised clusters."
              fi
        else
              echo "Sample does not have SV-SNV clusters"
-       fi
-       
-
+       fi  
        '''
 }
+
+test.view()
 
 process get_snv_clusters {
       
