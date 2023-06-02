@@ -155,7 +155,7 @@ process get_sv_clusters {
        echo finished
        echo $(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
        
-       test=$(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
+       test="$(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)"
        echo $test
        
        #ocloser=$(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
