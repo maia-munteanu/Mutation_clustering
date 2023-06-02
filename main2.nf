@@ -151,13 +151,17 @@ process get_sv_clusters {
        echo '[[annotation]] \n file=\"!{sample}.sv_snv.ann.bed.gz\" \n names=[\"SV-SNV\"] \n columns=[4] \n ops=[\"self\"]' >> !{sample}.conf
        vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
-       ocloser=$(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
-       oclose=$(zgrep -wc SV-SNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz)
-       rcloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
-       rclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
        
        echo finished
-       echo $ocloser
+       echo $(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
+       
+       #ocloser=$(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
+       #oclose=$(zgrep -wc SV-SNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz)
+       #rcloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
+       #rclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
+       
+       #echo finished
+       #echo $ocloser
 
        ''' 
 }
