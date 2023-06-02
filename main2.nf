@@ -159,7 +159,7 @@ process get_sv_clusters {
        
        echo $ocloser; echo $oclose; echo $rcloser; echo $rclose;
        
-       if [ $ocloser -gt 0 ]; then echo something; fi     
+       if [ $(grep -w SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz | wc -l) -gt 0 ]; then echo something; fi     
        ''' 
 }
 
