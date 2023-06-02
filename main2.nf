@@ -168,9 +168,9 @@ process get_sv_clusters {
              echo "Sample does not have SV-SNV clusters"
        fi
        
-       if [[ -z ${ratio+x} ]]
+       if [[ -z ${ratio+x} && $(echo "$ratio > 0.2" | bc) ]]
        then 
-             echo "test complete"
+             echo "Sample passed all filters"
        fi
        '''
 }
