@@ -168,6 +168,10 @@ process get_sv_clusters {
              echo "Sample does not have SV-SNV clusters"
        fi
        
+       if [[ -z ${ratio+x} ]]
+       then 
+             echo "test complete"
+       fi
        '''
 }
 
