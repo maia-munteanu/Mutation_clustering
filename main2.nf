@@ -173,14 +173,18 @@ process get_sv_snv_clusters {
        rcloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
        rclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
        
-       if [ ocloser -gt 0 ] && [ oclose -gt 0 ]
-       then
-             echo Sample has SV-SNV clusters 
-             ratio=$(echo "scale=3; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
-             echo $ratio
-       else
-             echo Sample does not have any SV-SNV clusters 
-       fi     
+       echo ${ocloser}
+       echo $ocloser
+       
+       
+       #if [ ocloser -gt 0 ] && [ oclose -gt 0 ]
+       #then
+       #      echo Sample has SV-SNV clusters 
+       #      ratio=$(echo "scale=3; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
+       #      echo $ratio
+       #else
+       #      echo Sample does not have any SV-SNV clusters 
+       #fi     
        
        #if [ $(echo "$ratio > 0.2" | bc) ]
        #then
@@ -188,12 +192,7 @@ process get_sv_snv_clusters {
        #else
        #      echo "Sample passes all filters"   
        #fi  
-       
-       '''
-      
-       
-       
-       
+       ''' 
 }
 
 
