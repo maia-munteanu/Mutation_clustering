@@ -193,7 +193,7 @@ process get_snv_clusters {
 }
 
 
-
+annotate_snvs.view()
 
 
 
