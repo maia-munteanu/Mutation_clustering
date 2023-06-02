@@ -174,8 +174,6 @@ process get_sv_clusters {
        '''
 }
 
-test.view()
-
 process get_snv_clusters {
       
        input:
