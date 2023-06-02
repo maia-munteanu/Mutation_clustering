@@ -144,10 +144,7 @@ sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 process get_sv_clusters {
        input:
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
-      
-       output:
-       tuple val(sample), env(ratio), optional: true into test
- 
+
        shell:
        '''
        bgzip !{sample}.sv_snv.ann.bed
