@@ -11,6 +11,7 @@ params.close_value = 10000
 params.random_window = 1000000
 params.random_iter = 5
 params.random_batch = 2500
+params.svsnv_threshold = 0.2
 params.input_file = "/g/strcombio/fsupek_cancer1/SV_clusters_project/input2.csv"
 params.output_folder = "/g/strcombio/fsupek_cancer1/SV_clusters_project/Main2Results"
 params.mappability = "/home/mmunteanu/reference/CRG75_nochr.bed"
