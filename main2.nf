@@ -173,11 +173,8 @@ process get_sv_snv_clusters {
        
        ocloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
        oclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz)
-       ounclustered=$(grep -wc SV-SNV=UNCLUSTERED !{sample}.snv.filt.svsnv.vcf.gz)
        rcloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
        rclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
-       runclustered=$(grep -wc SV-SNV=UNCLUSTERED !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
-       ratio=$(echo "scale=2; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
        
        if [ ocloser -gt 0 ] && [ oclose -gt 0 ]
        then
