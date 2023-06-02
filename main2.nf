@@ -165,12 +165,12 @@ process get_sv_clusters {
              ratio=$(echo "scale=3; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
              echo "Ratio is $ratio"
        else
-             echo "Sample does not have SV-SNV clusters"
+             echo "Sample does not have SV-SNV clusters"; ratio=1
        fi
        
-       if [[ -z ${ratio+x} && 1 -eq $(echo "$ratio <= !{params.svsnv_threshold}" | bc) ]]
+       if [[ $(echo "$ratio<=!{params.svsnv_threshold}" | bc) -eq 1 ]]
        then 
-             echo "Sample has a low enough number of randomised SV-clustering SNVs compared to observed SV-SNVs (0.2 threshold). This sample will continue to be processed. "
+             echo "Sample has a low enough number of randomised SV-clustering SNVs compared to observed SV-SNVs (!{params.svsnv_threshold} threshold). This sample will continue to be processed. "
        fi
        '''
 }
