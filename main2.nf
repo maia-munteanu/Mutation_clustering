@@ -152,9 +152,12 @@ process get_sv_clusters {
        vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
        
-       echo finished
-       test=$(grep -w SV-SNV=UNCLUSTERED !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
-       echo $test
+       ocloser=$(grep -w SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
+       oclose=$(grep -w SV-SNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz)
+       rcloser=$(grep -w SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
+       rclose=$(grep -w SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
+       
+       echo $ocloser; echo $oclose; echo $rcloser; echo $rclose;
 
        ''' 
 }
