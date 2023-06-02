@@ -153,8 +153,8 @@ process get_sv_clusters {
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
        
        echo finished
-       echo $(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
-       test="$(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)"
+       test=1
+       echo $test
 
        ''' 
 }
