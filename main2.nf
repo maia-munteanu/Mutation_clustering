@@ -153,7 +153,7 @@ process get_sv_clusters {
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
        
        echo finished
-       test=$(grep SV-SNV=UNCLUSTERED !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
+       test=$(grep -w SV-SNV=UNCLUSTERED !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
        echo $test
 
        ''' 
