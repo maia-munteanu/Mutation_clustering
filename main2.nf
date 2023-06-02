@@ -70,7 +70,7 @@ process parse_svs {
       
        shell:
        '''  
-       if [ $(zgrep -v "^#" !{sv} | wc -l) -gt 0 ]
+       if [[ $(zgrep -v "^#" !{sv} | wc -l) -gt 0 ]]
        then
               svname=$(bcftools query -l !{sv} | sed -n 2p)
               Rscript !{baseDir}/simple-event-annotation.R !{sv} !{sample}
