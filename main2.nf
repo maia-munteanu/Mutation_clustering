@@ -156,21 +156,20 @@ process get_sv_clusters {
        oclose=$(grep -w SV-SNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
        rcloser=$(grep -w SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf | wc -l)
        rclose=$(grep -w SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf | wc -l)
-       
-       echo $ocloser; echo $oclose; echo $rcloser; echo $rclose
+       echo "Observed closer n=$ocloser"; echo "Observed close n=$oclose"; echo "Randomised closer n=$rcloser"; echo "Randomised close n=$rclose"
 
        if [[ $ocloser -gt 0 && $oclose -gt 0 ]]
        then
-             echo "Sample has SV-SNV clusters"
+             echo "Sample has SV-SNV clusters (both closer and close)"
              ratio=$(echo "scale=3; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
              echo "Ratio is $ratio"
        else
              echo "Sample does not have SV-SNV clusters"
        fi
        
-       if [[ -z ${ratio+x} && $(echo $ratio'>'0.2 | bc) ]]
+       if [[ -z ${ratio+x} && $(echo "$ratio > 0.2" | bc) ]]
        then 
-             echo "Sample passed all filters"
+             echo "Sample has a low enough number of randomised SV-clustering SNVs compared to observed SV-SNVs (0.2 threshold). This sample will continue to be processed. "
        fi
        '''
 }
