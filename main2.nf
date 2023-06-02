@@ -160,7 +160,7 @@ process get_sv_clusters {
        echo $ocloser; echo $oclose; echo $rcloser; echo $rclose
        test=3
        echo $test
-       if [[ $ocloser -gt 0 ]]
+       if [[ $ocloser -gt 0 && $rcloser -gt 0 ]]
        then
        echo "The variable is greater than 10."
        fi
