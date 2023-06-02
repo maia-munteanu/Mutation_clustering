@@ -171,6 +171,28 @@ process get_sv_snv_clusters {
        vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
        
+       ocloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
+       oclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz)
+       ounclustered=$(grep -wc SV-SNV=UNCLUSTERED !{sample}.snv.filt.svsnv.vcf.gz)
+       rcloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
+       rclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
+       runclustered=$(grep -wc SV-SNV=UNCLUSTERED !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
+       ratio=$(echo "scale=2; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
+       
+       if [ ocloser -gt 0 ] && [ oclose -gt 0 ]
+       then
+             echo "Sample has SV-SNV clusters"   
+       else
+             echo "Sample does not have any SV-SNV clusters"   
+       fi     
+       
+       if [ $(echo "$ratio > 0.2" | bc) ]
+       then
+             echo "Sample has too many randomised SV-SNV clusters"
+       else
+             echo "Sample passes all filters"   
+       fi  
+       
        #start counting instances of CLOSE/R with grep -c SV-SNV=CLOSE
        #then, if CLOSE/R = 0, reject observed sample
        #then, calculate CLOSE/R / UNCL. for observed and CLOSE/R / UNCL. * !{params.random_iter}
