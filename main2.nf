@@ -167,14 +167,6 @@ process get_sv_clusters {
        else
              echo Sample does not have any SV-SNV clusters 
        fi     
-       
-       #if [ $(echo "$ratio > 0.2" | bc) ]
-       #then
-       #      echo "Sample has too many randomised SV-SNV clusters"
-       #else
-       #      echo "Sample passes all filters"   
-       #fi  
-
        ''' 
 }
 
