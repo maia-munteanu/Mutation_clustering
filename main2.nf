@@ -159,11 +159,7 @@ process get_sv_clusters {
        
        echo $ocloser; echo $oclose; echo $rcloser; echo $rclose;
        
-       if [ $ocloser -gt 0 ]; then
-       echo "Sample has SV-SNV clusters"
-       ratio=$(echo "scale=3; ($rcloser+$rclose)/(($ocloser+$oclose)*!{params.random_iter})" | bc)
-       echo "ratio is $ratio"
-       fi     
+       if [ $ocloser -gt 0 ]; then echo "Sample has SV-SNV clusters"; fi     
        ''' 
 }
 
