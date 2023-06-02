@@ -153,7 +153,7 @@ process get_sv_clusters {
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
        
        echo finished
-       test=1
+       test=$(ls | wc -l)
        echo $test
 
        ''' 
