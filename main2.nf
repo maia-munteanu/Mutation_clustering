@@ -156,7 +156,7 @@ process get_snv_clusters {
 
 sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 
-process get_sv_snv_clusters {
+process get_sv_clusters {
        input:
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
  
@@ -173,7 +173,7 @@ process get_sv_snv_clusters {
        rcloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
        rclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
        
-       echo ${ocloser}
+       #echo ${ocloser}
        echo $ocloser
        
        
