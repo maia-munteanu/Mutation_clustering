@@ -145,7 +145,7 @@ process get_sv_clusters {
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv      
  
        shell:
-       """
+       '''
        bgzip !{sample}.sv_snv.ann.bed
        tabix -p bed !{sample}.sv_snv.ann.bed.gz
        echo '[[annotation]] \n file=\"!{sample}.sv_snv.ann.bed.gz\" \n names=[\"SV-SNV\"] \n columns=[4] \n ops=[\"self\"]' >> !{sample}.conf
@@ -159,7 +159,8 @@ process get_sv_clusters {
        
        echo $ocloser; echo $oclose; echo $rcloser; echo $rclose
        test=3
-       """
+       echo $test
+       '''
 }
 
 process get_snv_clusters {
