@@ -156,15 +156,12 @@ process get_sv_clusters {
        echo $(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
        
        test="$(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)"
-       echo $test
        
        #ocloser=$(zgrep -wc SV-SNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz)
        #oclose=$(zgrep -wc SV-SNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz)
        #rcloser=$(grep -wc SV-SNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
        #rclose=$(grep -wc SV-SNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf)
        
-       #echo finished
-       #echo $ocloser
 
        ''' 
 }
