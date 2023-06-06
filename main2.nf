@@ -64,7 +64,6 @@ if (params.vcfanno_conf){
       params.vcfanno = FALSE
 }
  
-
 sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv) ] }.view()
 
