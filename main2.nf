@@ -202,13 +202,16 @@ snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).v
 process snv_annotation {
        input:
        tuple val(sample), file(vcf), file(tsv), file(txt) from snv_to_annotate 
+       path vcfanno_conf
       
        output:
        tuple val(sample), file("${sample}.snv.clusters.tsv") into dataframes 
        
        shell:
        '''
-       clustmut distance -i . --glob !{tsv} -o !{sample} -Vv
-       Rscript !{baseDir}/vranges_to_tsv.R !{sample} !{sample}_distance_VRanges.rds
+       if [[ !{params.vcfanno} = true ]]
+       then 
+            vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf.gz
+       fi
        '''
 }
