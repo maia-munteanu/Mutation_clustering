@@ -19,7 +19,7 @@ params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
 params.assembly = "hg19"
 params.serial_genome = null
 params.chr_sizes = null
-params.vcfanno = "/g/strcombio/fsupek_cancer1/SV_clusters_project/vcfanno/vcfanno.conf"
+params.vcfanno_conf = "/g/strcombio/fsupek_cancer1/SV_clusters_project/vcfanno/vcfanno.conf"
 
 reference = file(params.reference)
 mappability = file(params.mappability)
@@ -56,6 +56,14 @@ if (params.chr_sizes){
         """
     }
 }
+
+if (params.vcfanno_conf){
+      vcfanno_conf = file(params.vcfanno_conf)
+      params.vcfanno = TRUE
+}else{
+      params.vcfanno = FALSE
+}
+ 
 
 sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv) ] }.view()
