@@ -19,6 +19,7 @@ params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
 params.assembly = "hg19"
 params.serial_genome = null
 params.chr_sizes = null
+params.vcfanno = "/g/strcombio/fsupek_cancer1/SV_clusters_project/vcfanno/vcfanno.conf"
 
 reference = file(params.reference)
 mappability = file(params.mappability)
