@@ -186,7 +186,6 @@ process get_sv_snv_clusters {
 }
 
 process get_snv_clusters {
-      
        input:
        tuple val(sample), file(tsv) from randomised_tsv 
       
