@@ -59,10 +59,8 @@ if (params.chr_sizes){
 
 if (params.vcfanno_conf){
       vcfanno_conf = file(params.vcfanno_conf)
-      params.vcfanno = TRUE
-}else{
-      params.vcfanno = FALSE
-}
+      params.vcfanno = true
+}else{params.vcfanno = false}
  
 sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv) ] }.view()
@@ -199,8 +197,18 @@ process get_snv_clusters {
        '''
 }
 
+snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).view()
 
-test=annotate_snvs.view()
-
-
-
+process snv_annotation {
+       input:
+       tuple val(sample), file(vcf), file(tsv), file(txt) from snv_to_annotate 
+      
+       output:
+       tuple val(sample), file("${sample}.snv.clusters.tsv") into dataframes 
+       
+       shell:
+       '''
+       clustmut distance -i . --glob !{tsv} -o !{sample} -Vv
+       Rscript !{baseDir}/vranges_to_tsv.R !{sample} !{sample}_distance_VRanges.rds
+       '''
+}
