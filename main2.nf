@@ -17,8 +17,8 @@ params.output_folder = "/g/strcombio/fsupek_cancer1/SV_clusters_project/Main2Res
 params.mappability = "/home/mmunteanu/reference/CRG75_nochr.bed"
 params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
 params.assembly = "hg19"
-params.serial_genome = null
-params.chr_sizes = null
+params.serial_genome = "/g/strcombio/fsupek_cancer1/SV_clusters_project/nextflow_analysis/work/fe/de893a2682e0e596c0e93511326ac1/hg19.fa.p"
+params.chr_sizes = "/g/strcombio/fsupek_cancer1/SV_clusters_project/nextflow_analysis/work/74/ef2caf9be07977563e32c228dc4bab/hg19.genome"
 params.vcfanno_conf = "/g/strcombio/fsupek_cancer1/SV_clusters_project/vcfanno/vcfanno.conf"
 
 reference = file(params.reference)
