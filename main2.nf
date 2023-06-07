@@ -138,7 +138,6 @@ errorStrategy 'retry'
        output:
        tuple val(sample), file("${sample}.snv.filt.vcf.gz"), file("${sample}.snv.filt.random*.vcf") into randomised_vcf
        tuple val(sample), file("${sample}.snv.filt.random*.tsv") into randomised_tsv
-
        
        shell:
        '''
