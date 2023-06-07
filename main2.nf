@@ -151,7 +151,7 @@ process get_sv_snv_clusters {
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv
       
        output:
-       tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into annotate_snvs
+       tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into(get_signatures,annotate_snvs)
 
        shell:
        '''
