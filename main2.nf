@@ -207,9 +207,6 @@ process snv_annotation {
        
        shell:
        '''
-       if [[ !{params.vcfanno} = true ]]
-       then 
-            vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf.gz
-       fi
+       vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf.gz
        '''
 }
