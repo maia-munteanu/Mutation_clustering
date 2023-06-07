@@ -25,7 +25,8 @@ reference = file(params.reference)
 mappability = file(params.mappability)
 
 if (params.serial_genome){
-      serial_genome = file(params.serial_genome)
+ //     serial_genome = file(params.serial_genome)
+    serial = Channel.fromPath(params.serial_genome)
 }else{      
     process serialize_genome {
         input: 
@@ -38,11 +39,11 @@ if (params.serial_genome){
         randommut -M serialize -g ${params.assembly}.fa -a ${params.assembly}
         """
     }
-   serial_genome = serial_genome.collect() 
 }
     
 if (params.chr_sizes){
-      chr_sizes = file(params.chr_sizes)
+   //   chr_sizes = file(params.chr_sizes)
+    chr_sizes = Channel.fromPath(params.chr_sizes)
 }else{      
     process get_chr_sizes {         
         input: 
@@ -56,7 +57,6 @@ if (params.chr_sizes){
         head -n 24 ${params.assembly}.fa.fai | cut -f1,2  > ${params.assembly}.genome
         """
     }
-   chr_sizes = chr_sizes.map { it }  
 }
 
 if (params.vcfanno_conf){
@@ -73,7 +73,7 @@ process parse_svs {
        input:
        tuple val(sample), file(sv) from sv_list
        path mappability
-       path chr_sizes
+       path chr from chr_sizes
        
        output:
        tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into(svs_exist, filter_by_sv_snv) 
@@ -94,9 +94,9 @@ process parse_svs {
                      bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
                      bcftools query -f '%CHROM\t%POS\t%SVLEN\t%SIMPLE_TYPE\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.txt
 
-                     bedtools slop -i sv.bed -g !{chr_sizes} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > closer.bed
-                     bedtools slop -i sv.bed -g !{chr_sizes} -b !{params.close_value} > cluster.bed
-                     bedtools complement -i cluster.bed -g !{chr_sizes} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
+                     bedtools slop -i sv.bed -g !{chr} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > closer.bed
+                     bedtools slop -i sv.bed -g !{chr} -b !{params.close_value} > cluster.bed
+                     bedtools complement -i cluster.bed -g !{chr} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
                      bedtools subtract -a cluster.bed -b closer.bed | sort -k1,1 -k2,2n | bedtools merge > close.bed     
                      awk -v OFS='\t' '{print $1,$2,$3,"CLOSER"}' closer.bed > closer.ann.bed
                      awk -v OFS='\t' '{print $1,$2,$3,"CLOSE"}' close.bed > close.ann.bed
@@ -134,7 +134,7 @@ errorStrategy 'retry'
        memory { 30.GB * task.attempt }
       
        input:
-       serial_genome
+       serial from serial_genome
        tuple val(sample), file(snv2rand) from snvs_to_randomise
       
        output:
@@ -145,7 +145,7 @@ errorStrategy 'retry'
        shell:
        '''
        bcftools query -f '%CHROM\t%POS\t%POS\t%REF\t%ALT{0}\t1\t!{sample}\n' !{snv2rand} > !{sample}.snv.filt.tsv
-       randommut -M randomize -g !{serial_genome} -m !{sample}.snv.filt.tsv -o !{sample}.snv.filt.random.R!{params.random_iter}.tsv -t !{params.random_iter} -w !{params.random_window} -b !{params.random_batch}
+       randommut -M randomize -g !{serial} -m !{sample}.snv.filt.tsv -o !{sample}.snv.filt.random.R!{params.random_iter}.tsv -t !{params.random_iter} -w !{params.random_window} -b !{params.random_batch}
        Rscript !{baseDir}/tsv_to_vcf.R !{sample} !{params.random_iter} !{sample}.snv.filt.tsv !{sample}.snv.filt.random.R!{params.random_iter}.tsv !{sample}.snv.filt.random.R!{params.random_iter}.vcf
 
        '''
