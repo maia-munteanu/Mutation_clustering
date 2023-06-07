@@ -103,8 +103,6 @@ process parse_svs {
                      cat *ann.bed | sort -k 1,1 -k2,2n > !{sample}.sv_snv.ann.bed 
               fi
        fi        
-           
-
        '''
 }
 
