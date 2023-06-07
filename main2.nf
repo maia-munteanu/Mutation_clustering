@@ -185,6 +185,8 @@ process get_sv_snv_clusters {
 }
 
 process count_mutations {
+    publishDir params.output_folder+"/Counts/", mode: 'copy', pattern: '*.all'
+    
     input:
     path "*" from to_count.collect()
 
