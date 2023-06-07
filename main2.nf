@@ -70,6 +70,8 @@ sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(head
                    .map{ row -> [ row.sample, file(row.sv) ] }.view()
 
 process parse_svs {
+       tag { sample }
+      
        input:
        tuple val(sample), file(sv) from sv_list
        path mappability
