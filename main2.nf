@@ -25,7 +25,7 @@ reference = file(params.reference)
 mappability = file(params.mappability)
 
 if (params.serial_genome){
-    serial_genome = Channel.fromPath(params.serial_genome)
+    serial_genome = file(params.serial_genome)
 }else{      
     process serialize_genome {
         input: 
@@ -41,7 +41,7 @@ if (params.serial_genome){
 }
     
 if (params.chr_sizes){
-    chr_sizes = Channel.fromPath(params.chr_sizes)
+    chr_sizes = file(params.chr_sizes)
 }else{      
     process get_chr_sizes {         
         input: 
