@@ -151,7 +151,8 @@ process get_sv_snv_clusters {
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv
       
        output:
-       tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into(get_signatures,annotate_snvs)
+       tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into annotate_snvs
+       tuple file("${sample}.snv.closer.vcf"), file("${sample}.snv.close.vcf"), file("${sample}.snv.unclustered.vcf"), optional: true into to_count
 
        shell:
        '''
@@ -171,6 +172,9 @@ process get_sv_snv_clusters {
              if [[ $(echo "$ratio<=!{params.svsnv_threshold}" | bc) -eq 1 ]]
              then 
                    echo "Sample passes filters 1. SV-SNV are present and 2. below !{params.svsnv_threshold} randomised clusters."
+                   bcftools filter -i 'INFO/SVSNV=="CLOSER"' !{sample}.snv.filt.svsnv.vcf.gz | bcftools sort -Ov > !{sample}.snv.closer.vcf
+                   bcftools filter -i 'INFO/SVSNV=="CLOSE"' !{sample}.snv.filt.svsnv.vcf.gz | bcftools sort -Ov > !{sample}.snv.close.vcf
+                   bcftools filter -i 'INFO/SVSNV=="UNCLUSTERED"' !{sample}.snv.filt.svsnv.vcf.gz | bcftools sort -Ov > !{sample}.snv.unclustered.vcf
              else
                    echo "Sample passes filter 1. SV-SNV are present but fails filter 2. below !{params.svsnv_threshold} randomised clusters."; rm !{sample}.snv.filt.svsnv.vcf.gz
              fi
@@ -179,6 +183,30 @@ process get_sv_snv_clusters {
        fi  
        '''
 }
+
+process count_mutations {
+    input:
+    path "*" from to_count.collect()
+
+    output:
+    path "*.all" into counts
+
+    shell:
+    '''
+    mkdir closer_VCFs && mv *snv.closer.vcf closer_VCFs
+    mkdir close_VCFs && mv *snv.close.vcf close_VCFs
+    mkdir unclustered_VCFs && mv *snv.unclustered.vcf unclustered_VCFs
+    
+    python3 !{baseDir}/MatrixGenerator.py "closer" "GRCh37" "./closer_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "close" "GRCh37" "./close_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "unclustered" "GRCh37" "./unclustered_VCFs/"
+    
+    cp ./closer_VCFs/output/SBS/closer.SBS96.all ./
+    cp ./close_VCFs/output/SBS/close.SBS96.all ./
+    cp ./unclustered_VCFs/output/SBS/unclustered.SBS96.all ./
+   '''     
+}
+
 
 process get_snv_clusters {
        tag { sample }
