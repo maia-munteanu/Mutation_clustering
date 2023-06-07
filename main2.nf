@@ -208,8 +208,15 @@ process count_mutations {
 }
 
 process get_signatures {
+    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Closer'
+    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Closer'
+    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Closer'
+    
     input:
     path "*" from counts
+    
+    output:
+    path "*.txt" into probabilities
     
     shell:
     '''
@@ -220,6 +227,9 @@ process get_signatures {
     python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" "GRCh37" 1 1
     python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" "GRCh37" 1 1
     python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" "GRCh37" 1 1
+    
+    cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./
+    cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./
     '''
 }
 
@@ -245,6 +255,7 @@ process snv_annotation {
        input:
        tuple val(sample), file(vcf), file(tsv), file(txt) from snv_to_annotate 
        path vcfanno_conf
+       path "*" from probabilities
       
        output:
        tuple val(sample), file("${sample}.snv.clusters.tsv") into dataframes 
