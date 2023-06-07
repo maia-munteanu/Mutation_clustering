@@ -28,6 +28,8 @@ if (params.serial_genome){
       serial_genome = file(params.serial_genome)
 }else{      
     process serialize_genome {
+        publishDir params.output_folder+"/Genome/", mode: 'move', pattern: '*fa.p' 
+          
         input: 
         path "${params.assembly}.fa" from reference
 
@@ -44,6 +46,8 @@ if (params.chr_sizes){
       chr_sizes = file(params.chr_sizes)
 }else{      
     process get_chr_sizes {
+        publishDir params.output_folder+"/Genome/", mode: 'move', pattern: '*.genome'   
+          
         input: 
         path "${params.assembly}.fa" from reference
 
