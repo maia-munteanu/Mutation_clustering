@@ -127,9 +127,8 @@ process parse_snvs {
 
 process randomise_snvs {
        tag { sample }
+       errorStrategy 'retry'
        memory { 30.GB * task.attempt }
-       errorStrategy { task.exitStatus == 137 ? 'retry' : 'terminate' } 
-       maxRetries 10
        input:
        path serial from serial_genome
        tuple val(sample), file(snv2rand) from snvs_to_randomise
