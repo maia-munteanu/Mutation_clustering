@@ -23,6 +23,7 @@ params.vcfanno_conf = "/g/strcombio/fsupek_cancer1/SV_clusters_project/vcfanno/v
 
 reference = file(params.reference)
 mappability = file(params.mappability)
+vcfanno_conf = file(params.vcfanno_conf)
 
 if (params.serial_genome){
     serial_genome = file(params.serial_genome)
@@ -57,11 +58,6 @@ if (params.chr_sizes){
     }
 }
 
-if (params.vcfanno_conf){
-      vcfanno_conf = file(params.vcfanno_conf)
-      params.vcfanno = true
-}else{params.vcfanno = false}
- 
 sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv) ] }.view()
 
