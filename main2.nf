@@ -69,7 +69,6 @@ sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(head
 
 process parse_svs {
        tag { sample }
-      
        input:
        tuple val(sample), file(sv) from sv_list
        path mappability
@@ -113,6 +112,7 @@ snv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(hea
                    .map{ row -> [ row.sample, file(row.snv) ] }.join(svs_exist).view()
 
 process parse_snvs {
+       tag { sample }
        input:
        tuple val(sample), file(snv) from snv_list
        path mappability
@@ -132,7 +132,7 @@ process parse_snvs {
 process randomise_snvs {
 errorStrategy 'retry'
        memory { 30.GB * task.attempt }
-      
+       tag { sample }
        input:
        path serial from serial_genome
        tuple val(sample), file(snv2rand) from snvs_to_randomise
@@ -154,6 +154,7 @@ errorStrategy 'retry'
 sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
 
 process get_sv_snv_clusters {
+       tag { sample }
        input:
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv
       
@@ -188,6 +189,7 @@ process get_sv_snv_clusters {
 }
 
 process get_snv_clusters {
+       tag { sample }
        input:
        tuple val(sample), file(tsv) from randomised_tsv 
       
@@ -204,6 +206,7 @@ process get_snv_clusters {
 snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).view()
 
 process snv_annotation {
+       tag { sample }
        input:
        tuple val(sample), file(vcf), file(tsv), file(txt) from snv_to_annotate 
        path vcfanno_conf
