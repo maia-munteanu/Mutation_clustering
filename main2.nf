@@ -38,6 +38,7 @@ if (params.serial_genome){
         randommut -M serialize -g ${params.assembly}.fa -a ${params.assembly}
         """
     }
+   serial_genome = serial_genome.map { it }  
 }
     
 if (params.chr_sizes){
@@ -55,6 +56,7 @@ if (params.chr_sizes){
         head -n 24 ${params.assembly}.fa.fai | cut -f1,2  > ${params.assembly}.genome
         """
     }
+   chr_sizes = chr_sizes.map { it }  
 }
 
 if (params.vcfanno_conf){
