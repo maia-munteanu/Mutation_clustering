@@ -26,7 +26,7 @@ mappability = file(params.mappability)
 
 if (params.serial_genome){
  //     serial_genome = file(params.serial_genome)
-    serial = Channel.fromPath(params.serial_genome)
+    serial_genome = Channel.fromPath(params.serial_genome)
 }else{      
     process serialize_genome {
         input: 
