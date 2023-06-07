@@ -85,9 +85,7 @@ process parse_svs {
               if [[ $(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l) -gt 0 ]] 
               then            
                      bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
-                     # bcftools query -f '%CHROM\t%POS\t%SVLEN\t%SIMPLE_TYPE\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.txt
-                     bcftools query -f '%CHROM\t%POS\t%ID\t%QUAL\t%SVLEN\t%SIMPLE_TYPE\t[%PURPLE_AF]\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.txt
-
+                     bcftools query -f '%CHROM\t%POS\t%SVLEN\t%SIMPLE_TYPE\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.txt
                      bedtools slop -i sv.bed -g !{chr} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > closer.bed
                      bedtools slop -i sv.bed -g !{chr} -b !{params.close_value} > cluster.bed
                      bedtools complement -i cluster.bed -g !{chr} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
