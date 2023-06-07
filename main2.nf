@@ -38,7 +38,7 @@ if (params.serial_genome){
         randommut -M serialize -g ${params.assembly}.fa -a ${params.assembly}
         """
     }
-   serial_genome = serial_genome.map { it }  
+   serial_genome = serial_genome.collect() 
 }
     
 if (params.chr_sizes){
