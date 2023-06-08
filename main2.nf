@@ -71,7 +71,7 @@ process parse_svs {
        
        output:
        tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into(svs_exist, filter_by_sv_snv) 
-       tuple val(sample), file("${sample}.sv.ann.txt"), optional: true into annotate_with_sv_info
+       tuple val(sample), file("${sample}.sv.ann.tsv"), optional: true into annotate_with_sv_info
       
        shell:
        '''  
@@ -86,7 +86,7 @@ process parse_svs {
               if [[ $(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l) -gt 0 ]] 
               then            
                      bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
-                     bcftools query -f '%CHROM\t%POS\t%SVLEN\t%SIMPLE_TYPE\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.txt
+                     bcftools query -f '%CHROM\t%POS\t%REF\t%ALT\t%ID\t%QUAL\t%SVLEN\t%SIMPLE_TYPE[\t%PURPLE_AF][\t%PURPLE_CN]\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.tsv
                      bedtools slop -i sv.bed -g !{chr} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > closer.bed
                      bedtools slop -i sv.bed -g !{chr} -b !{params.close_value} > cluster.bed
                      bedtools complement -i cluster.bed -g !{chr} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
