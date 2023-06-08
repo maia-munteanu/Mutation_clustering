@@ -267,6 +267,6 @@ process snv_annotation {
        vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf
        bgzip !{sample}.snv.filt.svsnv.ann.vcf
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
-       
+       vcf2tsv -n . !{sample}.snv.filt.svsnv.ann.vcf.gz > Hartwig_CPCT02010037T.snv.filt.svsnv.ann.tsv
        '''
 }
