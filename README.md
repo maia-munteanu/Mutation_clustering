@@ -7,7 +7,5 @@
 
 **serial_genome** - if you do not provide a serialised genome .fasta.pickle file, it will be automatically generated with **randommut** 
 
-**vcf** - make sure that chromosome names don't include "chr"
-
 ### Parameters
 
