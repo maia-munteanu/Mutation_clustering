@@ -256,7 +256,7 @@ snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).v
 process snv_annotation {
        tag { sample }
        input:
-       tuple val(sample), file(vcf), file(tsv), file(txt) from snv_to_annotate 
+       tuple val(sample), file(vcf), file(snvsnv), file(sv) from snv_to_annotate 
        path vcfanno_conf
        path denovo from denovo_probabilities
        path decomposed from decomposed_probabilities
