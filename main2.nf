@@ -158,7 +158,8 @@ process get_sv_snv_clusters {
        tabix -p bed !{sample}.sv_snv.ann.bed.gz
        echo '[[annotation]] \n file=\"!{sample}.sv_snv.ann.bed.gz\" \n names=[\"SVSNV\"] \n columns=[4] \n ops=[\"self\"]' >> !{sample}.conf
        vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
-       vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf.gz
+       vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf
+       bgzip !{sample}.snv.filt.svsnv.vcf
        
        ocloser=$(grep -w SVSNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz | wc -l); oclose=$(grep -w SVSNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
        rcloser=$(grep -w SVSNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf | wc -l); rclose=$(grep -w SVSNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf | wc -l)
@@ -262,6 +263,9 @@ process snv_annotation {
        
        shell:
        '''
-       vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf.gz
+       vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf
+       bgzip !{sample}.snv.filt.svsnv.ann.vcf
+       tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
+       
        '''
 }
