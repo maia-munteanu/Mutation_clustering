@@ -17,6 +17,7 @@ params.output_folder = "/g/strcombio/fsupek_cancer1/SV_clusters_project/Main2Res
 params.mappability = "/home/mmunteanu/reference/CRG75_nochr.bed"
 params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
 params.assembly = "hg19"
+params.sigproassembly = "GRCh37"
 params.serial_genome = "/g/strcombio/fsupek_cancer1/SV_clusters_project/nextflow_analysis/work/fe/de893a2682e0e596c0e93511326ac1/hg19.fa.p"
 params.chr_sizes = "/g/strcombio/fsupek_cancer1/SV_clusters_project/nextflow_analysis/work/74/ef2caf9be07977563e32c228dc4bab/hg19.genome"
 params.vcfanno_conf = "/g/strcombio/fsupek_cancer1/SV_clusters_project/vcfanno/vcfanno.conf"
@@ -198,9 +199,9 @@ process count_mutations {
     mkdir close_VCFs && mv *snv.close.vcf close_VCFs
     mkdir unclustered_VCFs && mv *snv.unclustered.vcf unclustered_VCFs
     
-    python3 !{baseDir}/MatrixGenerator.py "closer" "GRCh37" "./closer_VCFs/"
-    python3 !{baseDir}/MatrixGenerator.py "close" "GRCh37" "./close_VCFs/"
-    python3 !{baseDir}/MatrixGenerator.py "unclustered" "GRCh37" "./unclustered_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "closer" !{params.sigproassembly} "./closer_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "close" !{params.sigproassembly} "./close_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "unclustered" !{params.sigproassembly} "./unclustered_VCFs/"
     
     cp ./closer_VCFs/output/SBS/closer.SBS96.all ./
     cp ./close_VCFs/output/SBS/close.SBS96.all ./
@@ -210,8 +211,8 @@ process count_mutations {
 
 process get_signatures {
     publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Closer'
-    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Closer'
-    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Closer'
+    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Close'
+    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Unclustered'
     
     input:
     path "*" from counts
@@ -225,9 +226,9 @@ process get_signatures {
     mkdir Close && mv close.SBS96.all ./Close
     mkdir Unclustered && mv unclustered.SBS96.all ./Unclustered
     
-    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" "GRCh37" 1 1
-    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" "GRCh37" 1 1
-    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" "GRCh37" 1 1
+    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" !{params.sigproassembly} 1 1
+    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" !{params.sigproassembly} 1 1
+    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" !{params.sigproassembly} 1 1
     
     cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./
     cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./
