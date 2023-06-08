@@ -184,6 +184,21 @@ process get_sv_snv_clusters {
        '''
 }
 
+process get_snv_clusters {
+       tag { sample }
+       input:
+       tuple val(sample), file(tsv) from randomised_tsv 
+      
+       output:
+       tuple val(sample), file("${sample}.snv.clusters.tsv") into snv_clusters 
+       
+       shell:
+       '''
+       clustmut distance -i . --glob !{tsv} -o !{sample} -Vv
+       Rscript !{baseDir}/vranges_to_tsv.R !{sample} !{sample}_distance_VRanges.rds
+       '''
+}
+
 process count_mutations {
     publishDir params.output_folder+"/Counts/", mode: 'copy', pattern: '*.all'
     
@@ -233,21 +248,6 @@ process get_signatures {
     cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./
     cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./
     '''
-}
-
-process get_snv_clusters {
-       tag { sample }
-       input:
-       tuple val(sample), file(tsv) from randomised_tsv 
-      
-       output:
-       tuple val(sample), file("${sample}.snv.clusters.tsv") into snv_clusters 
-       
-       shell:
-       '''
-       clustmut distance -i . --glob !{tsv} -o !{sample} -Vv
-       Rscript !{baseDir}/vranges_to_tsv.R !{sample} !{sample}_distance_VRanges.rds
-       '''
 }
 
 snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).view()
