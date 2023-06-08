@@ -233,7 +233,8 @@ process get_signatures {
     path "*" from counts
     
     output:
-    path "*.txt" into probabilities
+    path "De_Novo_Mutation_Probabilities_refit.txt" into denovo_probabilities
+    path "Decomposed_Mutation_Probabilities.txt" into decomposed_probabilities
     
     shell:
     '''
@@ -257,7 +258,8 @@ process snv_annotation {
        input:
        tuple val(sample), file(vcf), file(tsv), file(txt) from snv_to_annotate 
        path vcfanno_conf
-       path "*" from probabilities
+       path denovo from denovo_probabilities
+       path decomposed from decomposed_probabilities
       
        output:
        tuple val(sample), file("${sample}.snv.clusters.tsv") into dataframes 
