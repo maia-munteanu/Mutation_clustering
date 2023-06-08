@@ -160,8 +160,7 @@ process get_sv_snv_clusters {
        echo '[[annotation]] \n file=\"!{sample}.sv_snv.ann.bed.gz\" \n names=[\"SVSNV\"] \n columns=[4] \n ops=[\"self\"]' >> !{sample}.conf
        vcfanno_linux64 !{sample}.conf !{rvcf} > !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf
-       bgzip !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf
-       bgzip !{sample}.snv.filt.svsnv.vcf
+       bgzip !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf; bgzip !{sample}.snv.filt.svsnv.vcf
        
        ocloser=$(zgrep -w SVSNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz | wc -l); oclose=$(zgrep -w SVSNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
        rcloser=$(zgrep -w SVSNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf.gz | wc -l); rclose=$(zgrep -w SVSNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf.gz | wc -l)
