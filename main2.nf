@@ -162,8 +162,8 @@ process get_sv_snv_clusters {
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf
        bgzip !{sample}.snv.filt.svsnv.vcf
        
-       ocloser=$(grep -w SVSNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz | wc -l); oclose=$(grep -w SVSNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
-       rcloser=$(grep -w SVSNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf | wc -l); rclose=$(grep -w SVSNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf | wc -l)
+       ocloser=$(zgrep -w SVSNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz | wc -l); oclose=$(grep -w SVSNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
+       rcloser=$(zgrep -w SVSNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf | wc -l); rclose=$(grep -w SVSNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf | wc -l)
        echo "Observed closer n=$ocloser"; echo "Observed close n=$oclose"; echo "Randomised closer n=$rcloser"; echo "Randomised close n=$rclose"
 
        if [[ $ocloser -gt 0 && $oclose -gt 0 ]]
