@@ -72,7 +72,7 @@ process parse_svs {
        output:
        tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into(svs_exist, filter_by_sv_snv) 
        tuple val(sample), file("${sample}.sv.ann.tsv"), optional: true into annotate_with_sv_info
-       tuple val(sample), env(filter) into filter_outputs
+       tuple val(sample), env(filter) into sv_filter
       
        shell:
        '''  
@@ -158,6 +158,7 @@ process get_sv_snv_clusters {
        output:
        tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into annotate_snvs
        tuple file("${sample}.snv.closer.vcf"), file("${sample}.snv.close.vcf"), file("${sample}.snv.unclustered.vcf"), optional: true into to_count
+       tuple val(sample), env(filter), env(ratio) into snv_filter
 
        shell:
        '''
@@ -181,11 +182,15 @@ process get_sv_snv_clusters {
                    bcftools filter -i 'INFO/SVSNV=="CLOSER"' !{sample}.snv.filt.svsnv.vcf.gz | bcftools sort -Ov > !{sample}.snv.closer.vcf
                    bcftools filter -i 'INFO/SVSNV=="CLOSE"' !{sample}.snv.filt.svsnv.vcf.gz | bcftools sort -Ov > !{sample}.snv.close.vcf
                    bcftools filter -i 'INFO/SVSNV=="UNCLUSTERED"' !{sample}.snv.filt.svsnv.vcf.gz | bcftools sort -Ov > !{sample}.snv.unclustered.vcf
+                   filter="SNV-FILTER-PASS"
              else
                    echo "Sample passes filter 1. SV-SNV are present but fails filter 2. below !{params.svsnv_threshold} randomised clusters."; rm !{sample}.snv.filt.svsnv.vcf.gz
+                   filter="SNV-FILTER-2"
+                   
              fi
        else
-             echo "Sample does not have SV-SNV clusters"; rm !{sample}.snv.filt.svsnv.vcf.gz
+             echo "Sample does not have SV-SNV clusters"; rm !{sample}.snv.filt.svsnv.vcf.gz; 
+             filter="SNV-FILTER-1"; ratio=0
        fi  
        '''
 }
@@ -279,10 +284,15 @@ process snv_annotation {
        '''
 }
 
-filter_outputs.flatten()
+sv_filter.flatten()
                .collate( 2 )
                .map { it.join("\t") + "\n" } 
-               .collectFile(name: 'SVfilters.txt', storeDir: params.output_folder)
+               .collectFile(name: 'SV-filter.txt', storeDir: params.output_folder+"/Filtering_outcome/")
+
+snv_filter.flatten()
+               .collate( 3 )
+               .map { it.join("\t") + "\n" } 
+               .collectFile(name: 'SNV-filter.txt', storeDir: params.output_folder+"/Filtering_outcome/")
 
 
     
