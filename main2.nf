@@ -277,3 +277,5 @@ process snv_annotation {
        vcf2tsv -n . !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
        '''
 }
+
+filter_outputs.collect().view()
