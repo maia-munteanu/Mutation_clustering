@@ -12,12 +12,16 @@ params.random_window = 1000000
 params.random_iter = 5
 params.random_batch = 2500
 params.svsnv_threshold = 0.2
+params.minsig = 1
+params.maxsig = 1
+params.assembly = "hg19"
+params.sigproassembly = "GRCh37"
+
+
 params.input_file = "/g/strcombio/fsupek_cancer1/SV_clusters_project/input2.csv"
 params.output_folder = "/g/strcombio/fsupek_cancer1/SV_clusters_project/Main2Results"
 params.mappability = "/home/mmunteanu/reference/CRG75_nochr.bed"
 params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
-params.assembly = "hg19"
-params.sigproassembly = "GRCh37"
 params.serial_genome = "/g/strcombio/fsupek_cancer1/SV_clusters_project/nextflow_analysis/work/fe/de893a2682e0e596c0e93511326ac1/hg19.fa.p"
 params.chr_sizes = "/g/strcombio/fsupek_cancer1/SV_clusters_project/nextflow_analysis/work/74/ef2caf9be07977563e32c228dc4bab/hg19.genome"
 params.vcfanno_conf = "/g/strcombio/fsupek_cancer1/SV_clusters_project/vcfanno/vcfanno.conf"
@@ -253,9 +257,9 @@ process get_signatures {
     mkdir Close && mv close.SBS96.all ./Close
     mkdir Unclustered && mv unclustered.SBS96.all ./Unclustered
     
-    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" !{params.sigproassembly} 1 1
-    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" !{params.sigproassembly} 1 1
-    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" !{params.sigproassembly} 1 1
+    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig}
+    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig}
+    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig}
     
     cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./
     cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./
