@@ -158,7 +158,7 @@ process get_sv_snv_clusters {
        output:
        tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into annotate_snvs
        tuple file("${sample}.snv.closer.vcf"), file("${sample}.snv.close.vcf"), file("${sample}.snv.unclustered.vcf"), optional: true into to_count
-       tuple val(sample), env(filter), env(ratio) into snv_filter
+       tuple val(sample), env(filter), env(ratio), env(rcloser), env(rclose), env(ocloser), env(oclose) into snv_filter
 
        shell:
        '''
@@ -290,7 +290,7 @@ sv_filter.flatten()
                .collectFile(name: 'SV-filter.tsv', storeDir: params.output_folder+"/Filtering_outcome/")
 
 snv_filter.flatten()
-               .collate( 3 )
+               .collate( 7 )
                .map { it.join("\t") + "\n" } 
                .collectFile(name: 'SNV-filter.tsv', storeDir: params.output_folder+"/Filtering_outcome/")
 
