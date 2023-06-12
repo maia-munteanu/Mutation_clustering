@@ -64,7 +64,7 @@ if (params.chr_sizes){
 }
 
 sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-                   .map{ row -> [ row.sample, file(row.sv) ] }.view()
+                   .map{ row -> [ row.sample, file(row.sv) ] }
 
 process parse_svs {
        tag { sample }
@@ -111,7 +111,7 @@ process parse_svs {
 }
 
 snv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-                   .map{ row -> [ row.sample, file(row.snv) ] }.join(svs_exist).map{ sample, snv, bed -> [ sample, snv ] }.view()
+                   .map{ row -> [ row.sample, file(row.snv) ] }.join(svs_exist).map{ sample, snv, bed -> [ sample, snv ] }
 
 process parse_snvs {
        tag { sample }
@@ -152,7 +152,7 @@ process randomise_snvs {
        '''
 }
 
-sv_snv = randomised_vcf.join(filter_by_sv_snv).view()
+sv_snv = randomised_vcf.join(filter_by_sv_snv)
 
 process get_sv_snv_clusters {
        tag { sample }
@@ -266,7 +266,7 @@ process get_signatures {
     '''
 }
 
-snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).view()
+snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info)
 
 process snv_annotation {
        tag { sample }
