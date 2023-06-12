@@ -72,6 +72,7 @@ process parse_svs {
        output:
        tuple val(sample), file("${sample}.sv_snv.ann.bed"), optional: true into(svs_exist, filter_by_sv_snv) 
        tuple val(sample), file("${sample}.sv.ann.tsv"), optional: true into annotate_with_sv_info
+       tuple val(sample), env(filter), optional: true into filter_outputs
       
        shell:
        '''  
@@ -95,7 +96,11 @@ process parse_svs {
                      awk -v OFS='\t' '{print $1,$2,$3,"CLOSE"}' close.bed > close.ann.bed
                      awk -v OFS='\t' '{print $1,$2,$3,"UNCLUSTERED"}' unclustered.bed > unclustered.ann.bed
                      cat *ann.bed | sort -k 1,1 -k2,2n > !{sample}.sv_snv.ann.bed 
+              else
+                     filter="SV-Filter2"
               fi
+       else 
+                filter="SV-Filter1"  
        fi        
        '''
 }
