@@ -26,11 +26,6 @@ reference = file(params.reference)
 mappability = file(params.mappability)
 vcfanno_conf = file(params.vcfanno_conf)
 
-report {
-  enabled = true
-  file = params.output_folder+"/Pipeline_eports/report.html"
-}
-
 if (params.serial_genome){
     serial_genome = file(params.serial_genome)
 }else{      
