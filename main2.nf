@@ -240,9 +240,9 @@ process count_mutations {
 }
 
 process get_signatures {
-    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Closer'
-    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Close'
-    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: 'Unclustered'
+    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: './Closer'
+    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: './Close'
+    publishDir params.output_folder+"/Signatures/", mode: 'copy', pattern: './Unclustered'
     
     input:
     path "*" from counts
