@@ -101,7 +101,7 @@ process parse_svs {
                      filter="SV-FILTER-2"
               fi
        else 
-                filter="SV-FILTER-1"  
+              filter="SV-FILTER-1"  
        fi        
        '''
 }
