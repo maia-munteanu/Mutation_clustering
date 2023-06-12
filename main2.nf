@@ -250,6 +250,9 @@ process get_signatures {
     output:
     path "De_Novo_Mutation_Probabilities_refit.txt" into denovo_probabilities
     path "Decomposed_Mutation_Probabilities.txt" into decomposed_probabilities
+    path "./Closer"
+    path "./Close"
+    path "./Unclustered"
     
     shell:
     '''
