@@ -279,7 +279,7 @@ process snv_annotation {
        '''
 }
 
-filter_outputs.collectFile(name: 'SVfilters.txt', newLine: true, storeDir: params.output_folder)
+filter_outputs.collectFile(name: 'SVfilters.txt', storeDir: params.output_folder)
 
 
     
