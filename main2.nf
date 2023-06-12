@@ -279,7 +279,10 @@ process snv_annotation {
        '''
 }
 
-filter_outputs.flatten().collate( 2 ).collectFile(name: 'SVfilters.txt', storeDir: params.output_folder)
+filter_outputs.flatten()
+               .collate( 2 )
+               .map { it.join("\t") + "\n" } 
+               .collectFile(name: 'SVfilters.txt', storeDir: params.output_folder)
 
 
     
