@@ -292,12 +292,12 @@ process snv_annotation {
 sv_filter.flatten()
                .collate( 2 )
                .map { it.join("\t") + "\n" } 
-               .collectFile(name: 'SV-filter.txt', storeDir: params.output_folder+"/Filtering_outcome/")
+               .collectFile(name: 'SV-filter.tsv', storeDir: params.output_folder+"/Filtering_outcome/")
 
 snv_filter.flatten()
                .collate( 3 )
                .map { it.join("\t") + "\n" } 
-               .collectFile(name: 'SNV-filter.txt', storeDir: params.output_folder+"/Filtering_outcome/")
+               .collectFile(name: 'SNV-filter.tsv', storeDir: params.output_folder+"/Filtering_outcome/")
 
 
     
