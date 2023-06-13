@@ -248,8 +248,7 @@ process get_signatures {
     path "*" from counts
     
     output:
-    path "De_Novo_Mutation_Probabilities_refit.txt" into denovo_probabilities
-    path "Decomposed_Mutation_Probabilities.txt" into decomposed_probabilities
+    tuple path("Closer_denovo.txt"), path("Closer_decomp.txt"), path("Close_denovo.txt"), path("Close_decomp.txt"), path("Unclustered_denovo.txt"), path("Unclustered_decomp.txt") into probabilities 
     path "./Closer"
     path "./Close"
     path "./Unclustered"
@@ -264,14 +263,14 @@ process get_signatures {
     python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig}
     python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig}
     
-    cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./
-    cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./
+    cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Closer_denovo.txt
+    cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Closer_decomp.txt
     
-    cp ./Close/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./
-    cp ./Close/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./
+    cp ./Close/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Close_denovo.txt
+    cp ./Close/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Close_decomp.txt
     
-    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./
-    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./
+    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Unclustered_denovo.txt
+    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Unclustered_decomp.txt
     '''
 }
 
@@ -282,8 +281,7 @@ process snv_annotation {
        input:
        tuple val(sample), file(vcf), file(snvsnv), file(sv) from snv_to_annotate 
        path vcfanno_conf
-       path denovo from denovo_probabilities
-       path decomposed from decomposed_probabilities
+       tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
       
        output:
        tuple val(sample), file("${sample}.snv.clusters.tsv") into dataframes 
