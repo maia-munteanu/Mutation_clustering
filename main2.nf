@@ -249,9 +249,7 @@ process get_signatures {
     
     output:
     tuple path("Closer_denovo.txt"), path("Closer_decomp.txt"), path("Close_denovo.txt"), path("Close_decomp.txt"), path("Unclustered_denovo.txt"), path("Unclustered_decomp.txt") into probabilities 
-    path "./Closer"
-    path "./Close"
-    path "./Unclustered"
+    tuple path("./Closer"), path("./Close"), path("./Unclustered")
     
     shell:
     '''
@@ -265,10 +263,8 @@ process get_signatures {
     
     cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Closer_denovo.txt
     cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Closer_decomp.txt
-    
     cp ./Close/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Close_denovo.txt
     cp ./Close/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Close_decomp.txt
-    
     cp ./Unclustered/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Unclustered_denovo.txt
     cp ./Unclustered/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Unclustered_decomp.txt
     '''
