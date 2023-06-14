@@ -164,7 +164,7 @@ process get_sv_snv_clusters {
        output:
        tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into annotate_snvs
        tuple file("${sample}.snv.closer.vcf"), file("${sample}.snv.close.vcf"), file("${sample}.snv.unclustered.vcf"), optional: true into to_count
-       tuple val(sample), env(filter), env(ratio), env(rcloser), env(rclose), env(ocloser), env(oclose) into snv_filter
+       tuple val(sample), env(filter), env(ratio), env(rcloser), env(rclose), env(runclustered), env(ocloser), env(oclose), env(ounclustered) into snv_filter
 
        shell:
        '''
@@ -175,8 +175,8 @@ process get_sv_snv_clusters {
        vcfanno_linux64 !{sample}.conf !{ovcf} > !{sample}.snv.filt.svsnv.vcf
        bgzip !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf; bgzip !{sample}.snv.filt.svsnv.vcf
        
-       ocloser=$(zgrep -w SVSNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz | wc -l); oclose=$(zgrep -w SVSNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
-       rcloser=$(zgrep -w SVSNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf.gz | wc -l); rclose=$(zgrep -w SVSNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf.gz | wc -l)
+       ocloser=$(zgrep -w SVSNV=CLOSER !{sample}.snv.filt.svsnv.vcf.gz | wc -l); oclose=$(zgrep -w SVSNV=CLOSE !{sample}.snv.filt.svsnv.vcf.gz | wc -l); ounclustered=$(zgrep -w SVSNV=UNCLUSTERED !{sample}.snv.filt.svsnv.vcf.gz | wc -l)
+       rcloser=$(zgrep -w SVSNV=CLOSER !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf.gz | wc -l); rclose=$(zgrep -w SVSNV=CLOSE !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf.gz | wc -l); runclustered=$(zgrep -w SVSNV=UNCLUSTERED !{sample}.snv.filt.random.R!{params.random_iter}.svsnv.vcf.gz | wc -l)
        echo "Observed closer n=$ocloser"; echo "Observed close n=$oclose"; echo "Randomised closer n=$rcloser"; echo "Randomised close n=$rclose"
 
        if [[ $ocloser -gt 0 && $oclose -gt 0 ]]
