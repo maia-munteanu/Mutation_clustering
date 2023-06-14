@@ -202,11 +202,14 @@ process get_sv_snv_clusters {
 
 process get_snv_clusters {
        tag { sample }
+       publishDir params.output_folder+"/Plots/SNV-SNV", mode: 'move', pattern: '*_plot.pdf'
+    
        input:
        tuple val(sample), file(tsv) from randomised_tsv 
       
        output:
        tuple val(sample), file("${sample}.snv.clusters.tsv") into snv_clusters 
+       file("${sample}_snvsnv_clusters_plot.pdf")
        
        shell:
        '''
