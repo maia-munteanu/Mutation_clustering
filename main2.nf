@@ -209,7 +209,7 @@ process get_snv_clusters {
       
        output:
        tuple val(sample), file("${sample}.snv.clusters.tsv") into snv_clusters 
-       file("${sample}_snvsnv_clusters_plot.pdf")
+       file("${sample}_plot.pdf")
        
        shell:
        '''
