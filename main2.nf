@@ -163,10 +163,14 @@ process get_sv_snv_clusters {
        output:
        tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into annotate_snvs
        tuple file("${sample}.snv.closer.vcf"), file("${sample}.snv.close.vcf"), file("${sample}.snv.unclustered.vcf"), optional: true into to_count
-       tuple val(sample), env(filter), env(ratio), env(rcloser), env(rclose), env(runclustered), env(ocloser), env(oclose), env(ounclustered) into snv_filter
+       tuple val(sample), env(filter), env(ratio), env(rcloser), env(rclose), env(runclustered), env(ocloser), env(oclose), env(ounclustered), env(sizecloser), env(sizeclose), env(sizeunclustered) into snv_filter
 
        shell:
        '''
+       sizecloser=$(grep -w CLOSER !{sample}.sv_snv.ann.bed | | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
+       sizeclose=$(grep -w CLOSE !{sample}.sv_snv.ann.bed | | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
+       sizeunclustered=$(grep -w UNCLUSTERED !{sample}.sv_snv.ann.bed | | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
+       
        bgzip !{sample}.sv_snv.ann.bed
        tabix -p bed !{sample}.sv_snv.ann.bed.gz
        echo '[[annotation]] \n file=\"!{sample}.sv_snv.ann.bed.gz\" \n names=[\"SVSNV\"] \n columns=[4] \n ops=[\"self\"]' >> !{sample}.conf
@@ -301,7 +305,7 @@ sv_filter.flatten()
                .collectFile(name: 'SV-filter.tsv', storeDir: params.output_folder+"/Filtering_outcome/")
 
 snv_filter.flatten()
-               .collate( 9 )
+               .collate( 12 )
                .map { it.join("\t") + "\n" } 
                .collectFile(name: 'SNV-filter.tsv', storeDir: params.output_folder+"/Filtering_outcome/")
 
