@@ -11,7 +11,6 @@ sv_ann=fread(ann)
 colnames(sv_ann)=c("CHROM","POS","ID","QUAL","LENGTH","TYPE","PURPLE_VAF","PURPLE_CN")
 sv_linx=fread(linx)
 
-
 sv_ann$PURPLE_VAF=sapply(strsplit(sv_ann$PURPLE_VAF, ","), function(x) x[1])
 sv_ann$PURPLE_CN=sapply(strsplit(sv_ann$PURPLE_CN, ","), function(x) x[1])
 sv_ann[]=lapply(sv_ann, function(x) replace(x, x == ".", NA_character_))
