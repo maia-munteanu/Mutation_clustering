@@ -301,7 +301,7 @@ sv_filter.flatten()
                .collectFile(name: 'SV-filter.tsv', storeDir: params.output_folder+"/Filtering_outcome/")
 
 snv_filter.flatten()
-               .collate( 7 )
+               .collate( 9 )
                .map { it.join("\t") + "\n" } 
                .collectFile(name: 'SNV-filter.tsv', storeDir: params.output_folder+"/Filtering_outcome/")
 
