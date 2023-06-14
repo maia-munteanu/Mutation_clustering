@@ -93,7 +93,7 @@ process parse_svs {
                      bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
                      bcftools query -f '%CHROM\t%POS\t%ID\t%QUAL\t%SVLEN\t%SIMPLE_TYPE[\t%PURPLE_AF][\t%PURPLE_CN]\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.tsv
                      
-                     Rscript !{baseDir}/linx_annotation.R
+                     Rscript !{baseDir}/linx_annotation.R !{sample}.sv.ann.tsv !{linx}
                      
                      bedtools slop -i sv.bed -g !{chr} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > closer.bed
                      bedtools slop -i sv.bed -g !{chr} -b !{params.close_value} > cluster.bed
