@@ -89,12 +89,11 @@ process parse_svs {
               bcftools view -s $svname -f 'PASS' --regions-file !{mappability} !{sample}.sv.ann.vcf.gz | bcftools sort -Oz > !{sample}.sv.ann.filt.vcf.gz
               
               if [[ $(zgrep -v "^#" !{sample}.sv.ann.filt.vcf.gz | wc -l) -gt 0 ]] 
-              then            
-                     bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
+              then             
                      bcftools query -f '%CHROM\t%POS\t%ID\t%QUAL\t%SVLEN\t%SIMPLE_TYPE[\t%PURPLE_AF][\t%PURPLE_CN]\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.tsv
-                     
                      Rscript !{baseDir}/linx_annotation.R !{sample}.sv.ann.tsv !{linx}
                      
+                     bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
                      bedtools slop -i sv.bed -g !{chr} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > closer.bed
                      bedtools slop -i sv.bed -g !{chr} -b !{params.close_value} > cluster.bed
                      bedtools complement -i cluster.bed -g !{chr} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
