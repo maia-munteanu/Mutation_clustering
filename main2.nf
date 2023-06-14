@@ -64,12 +64,12 @@ if (params.chr_sizes){
 }
 
 sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-                   .map{ row -> [ row.sample, file(row.sv) ] }
+                   .map{ row -> [ row.sample, file(row.sv), file(row.linx) ] }
 
 process parse_svs {
        tag { sample }
        input:
-       tuple val(sample), file(sv) from sv_list
+       tuple val(sample), file(sv), file(linx) from sv_list
        path mappability
        path chr from chr_sizes
        
@@ -92,6 +92,9 @@ process parse_svs {
               then            
                      bcftools query -f '%CHROM\t%POS\t%POS\n' !{sample}.sv.ann.filt.vcf.gz > sv.bed
                      bcftools query -f '%CHROM\t%POS\t%ID\t%QUAL\t%SVLEN\t%SIMPLE_TYPE[\t%PURPLE_AF][\t%PURPLE_CN]\n' !{sample}.sv.ann.filt.vcf.gz > !{sample}.sv.ann.tsv
+                     
+                     Rscript !{baseDir}/linx_annotation.R
+                     
                      bedtools slop -i sv.bed -g !{chr} -b !{params.closer_value} | sort -k1,1 -k2,2n | bedtools merge > closer.bed
                      bedtools slop -i sv.bed -g !{chr} -b !{params.close_value} > cluster.bed
                      bedtools complement -i cluster.bed -g !{chr} | sort -k1,1 -k2,2n | bedtools merge > unclustered.bed
