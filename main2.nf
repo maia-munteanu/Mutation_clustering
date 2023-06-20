@@ -13,7 +13,7 @@ params.random_iter = 5
 params.random_batch = 2500
 params.svsnv_threshold = 0.2
 params.minsig = 1
-params.maxsig = 3
+params.maxsig = 4
 params.assembly = "hg19"
 params.sigproassembly = "GRCh37"
 
