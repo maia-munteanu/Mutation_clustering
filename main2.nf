@@ -157,6 +157,8 @@ sv_snv = randomised_vcf.join(filter_by_sv_snv)
 
 process get_sv_snv_clusters {
        tag { sample }
+       errorStrategy 'retry'
+       memory { 30.GB * task.attempt }
        input:
        tuple val(sample), file(ovcf), file(rvcf), file(bed) from sv_snv
       
