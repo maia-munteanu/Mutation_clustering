@@ -299,7 +299,7 @@ process snv_annotation {
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
        vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
 
-       echo !{sample} !{filter} !{ratio} !{rcloser} !{rclose} !{runclustered} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered}
+       echo !{ratio} !{rcloser} !{rclose} !{runclustered} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered}
        '''
 }
 
