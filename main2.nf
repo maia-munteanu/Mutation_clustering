@@ -280,12 +280,12 @@ process get_signatures {
     '''
 }
 
-snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info)
+snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
 
 process snv_annotation {
        tag { sample }
        input:
-       tuple val(sample), file(vcf), file(snvsnv), file(sv) from snv_to_annotate 
+       tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
        path vcfanno_conf
        tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
       
@@ -298,6 +298,8 @@ process snv_annotation {
        bgzip !{sample}.snv.filt.svsnv.ann.vcf
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
        vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
+
+       echo !{sample} !{filter} !{ratio} !{rcloser} !{rclose} !{runclustered} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered}
        '''
 }
 
