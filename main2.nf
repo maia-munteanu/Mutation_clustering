@@ -291,7 +291,7 @@ process snv_annotation {
        tag { sample }
        cpus = params.cores
 
-       publishDir params.output_folder+"/Plots/SNVs", mode: 'move', pattern: '*_plot.pdf'
+       publishDir params.output_folder+"/Plots/SNVs", mode: 'move', pattern: '*_plots.pdf'
        publishDir params.output_folder+"/Annotated-SNVs", mode: 'move', pattern: '*_annotated.tsv'
     
        input:
