@@ -12,6 +12,7 @@ params.random_window = 1000000
 params.random_iter = 5
 params.random_batch = 2500
 params.svsnv_threshold = 0.2
+params.cores = 8
 params.minsig = 1
 params.maxsig = 4
 params.assembly = "hg19"
@@ -26,6 +27,7 @@ params.serial_genome = "/g/strcombio/fsupek_cancer1/SV_clusters_project/nextflow
 params.chr_sizes = "/g/strcombio/fsupek_cancer1/SV_clusters_project/nextflow_analysis/work/74/ef2caf9be07977563e32c228dc4bab/hg19.genome"
 params.vcfanno_conf = "/g/strcombio/fsupek_cancer1/SV_clusters_project/vcfanno/vcfanno.conf"
 
+input_file = file(params.input_file)
 reference = file(params.reference)
 mappability = file(params.mappability)
 vcfanno_conf = file(params.vcfanno_conf)
@@ -286,9 +288,10 @@ process snv_annotation {
        tag { sample }
        input:
        tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
-       path vcfanno_conf
        tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
-      
+       path vcfanno_conf
+       path params.input_file
+
        output:
        tuple val(sample), file("${sample}.snv.clusters.tsv") into dataframes 
        
@@ -298,12 +301,8 @@ process snv_annotation {
        bgzip !{sample}.snv.filt.svsnv.ann.vcf
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
        vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
-       Rscript !{baseDir}/snv_annotation.R 
+       Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value}
 
-
-cores=as.integer(args[1])
-closer=as.integer(args[2])
-close=as.integer(args[3])
 input_file=fread(args[4])
 assembly=args[5]
 chr_sizes=fread(args[6]); colnames(chr_sizes)=c("CHROM","SIZE")
