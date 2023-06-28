@@ -265,8 +265,8 @@ process get_signatures {
 
     script:
     '''
-    echo ${name}
     echo !{name}
+    echo ${name}
     echo ${counts}
     echo !{counts}
     python3 !{baseDir}/SignatureExtractor.py "./Signatures" "./!{counts}" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
