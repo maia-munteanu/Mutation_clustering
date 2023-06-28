@@ -264,12 +264,12 @@ process get_signatures {
     tuple val(name), path("${name}_denovo.txt"), path("${name}_decomp.txt") into probabilities 
 
     script:
-    """
+    '''
     mkdir ${name} && mv ${counts} ./${name}
     python3 !{baseDir}/SignatureExtractor.py "./${name}/Signatures" "./${name}/${counts}" ${params.sigproassembly} ${params.minsig} ${params.maxsig} ${params.sig_cores}
     cp ./${name}/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./${name}_denovo.txt
     cp ./${name}/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./${name}_decomp.txt
-    """
+    '''
 }
 
 
