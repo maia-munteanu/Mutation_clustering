@@ -298,7 +298,33 @@ process snv_annotation {
        bgzip !{sample}.snv.filt.svsnv.ann.vcf
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
        vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
+       Rscript !{baseDir}/snv_annotation.R 
 
+
+cores=as.integer(args[1])
+closer=as.integer(args[2])
+close=as.integer(args[3])
+input_file=fread(args[4])
+assembly=args[5]
+chr_sizes=fread(args[6]); colnames(chr_sizes)=c("CHROM","SIZE")
+name=args[7]
+tsv=fread(args[8])
+snvsnv=fread(args[9])
+sv=fread(args[10])
+ratio=as.numeric(args[11])
+ocloser=as.integer(args[12])
+oclose=as.integer(args[13])
+ounclustered=as.integer(args[14])
+sizecloser=as.integer(args[15])
+sizeclose=as.integer(args[16])
+sizeunclustered=as.integer(args[17])
+closer_decomp=fread(args[18])
+closer_denovo=fread(args[19])
+close_decomp=fread(args[20])
+close_denovo=fread(args[21])
+unclustered_decomp=fread(args[22])
+unclustered_denovo=fread(args[23])
+      
        echo !{ratio} !{rcloser} !{rclose} !{runclustered} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered}
        '''
 }
