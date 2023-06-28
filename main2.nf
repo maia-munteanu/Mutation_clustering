@@ -242,13 +242,13 @@ process count_mutations {
     mkdir close_VCFs && mv *snv.close.vcf close_VCFs
     mkdir unclustered_VCFs && mv *snv.unclustered.vcf unclustered_VCFs
     
-    python3 !{baseDir}/MatrixGenerator.py "closer" !{params.sigproassembly} "./closer_VCFs/"
-    python3 !{baseDir}/MatrixGenerator.py "close" !{params.sigproassembly} "./close_VCFs/"
-    python3 !{baseDir}/MatrixGenerator.py "unclustered" !{params.sigproassembly} "./unclustered_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "Closer" !{params.sigproassembly} "./closer_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "Close" !{params.sigproassembly} "./close_VCFs/"
+    python3 !{baseDir}/MatrixGenerator.py "Unclustered" !{params.sigproassembly} "./unclustered_VCFs/"
     
-    cp ./closer_VCFs/output/SBS/closer.SBS96.all ./
-    cp ./close_VCFs/output/SBS/close.SBS96.all ./
-    cp ./unclustered_VCFs/output/SBS/unclustered.SBS96.all ./
+    cp ./closer_VCFs/output/SBS/Closer.SBS96.all ./
+    cp ./close_VCFs/output/SBS/Close.SBS96.all ./
+    cp ./unclustered_VCFs/output/SBS/Unclustered.SBS96.all ./
    '''     
 }
 
@@ -257,13 +257,14 @@ counts = counts_all.flatten().view()
 process get_signatures {
     cpus = params.sig_cores
 
-    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './*signatures'
+    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: '*/'
 
     input:
     path count from counts
 
     output:
     tuple path("*denovo.txt"), path("*decomp.txt") into probabilities
+    path ./$name
 
     shell:
     '''
@@ -274,7 +275,7 @@ process get_signatures {
     python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
     cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./$name_denovo.txt
     cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./$name_decomp.txt
-    mv ./Signatures $name_signatures
+    mv ./Signatures $name
     '''
 }
 
