@@ -263,6 +263,8 @@ process get_signatures {
     echo !{count}
     name=$(echo !{count} | awk -F'.' '{print \$1}')
     echo $name
+
+    python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
     '''
 }
 
