@@ -15,7 +15,7 @@ params.svsnv_threshold = 0.2
 params.cores = 8
 params.sig_cores = 32
 params.minsig = 1
-params.maxsig = 4
+params.maxsig = 1
 params.assembly = "hg19"
 params.sigproassembly = "GRCh37"
 
@@ -168,7 +168,7 @@ process get_sv_snv_clusters {
        output:
        tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into annotate_snvs
        tuple file("${sample}.snv.closer.vcf"), file("${sample}.snv.close.vcf"), file("${sample}.snv.unclustered.vcf"), optional: true into to_count
-       tuple val(sample), env(filter), env(ratio), env(rcloser), env(rclose), env(runclustered), env(ocloser), env(oclose), env(ounclustered), env(sizecloser), env(sizeclose), env(sizeunclustered) into(snv_filter, sample_info)
+       tuple val(sample), env(filter), env(ratio), env(rcloser), env(rclose), env(runclustered), env(ocloser), env(oclose), env(ounclustered), env(sizecloser), env(sizeclose), env(sizeunclustered.toString()) into(snv_filter, sample_info)
 
        shell:
        '''
@@ -273,8 +273,8 @@ process get_signatures {
     echo $name
 
     python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-    cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./$name_denovo.txt
-    cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./$name_decomp.txt
+    cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./\\$name_denovo.txt
+    cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./\\$name_decomp.txt
     mv ./Signatures $name
     '''
 }
