@@ -252,7 +252,7 @@ process count_mutations {
    '''     
 }
 
-counts_all.flatten().map { file -> [file.baseName.split("\\.")[0], file] }.set { counts }.view()
+counts = counts_all.flatten().map { file -> [file.baseName.split("\\.")[0], file] }.view()
 
 process get_signatures {
     cpus = params.sig_cores
