@@ -272,9 +272,9 @@ process get_signatures {
     mkdir Close && mv close.SBS96.all ./Close
     mkdir Unclustered && mv unclustered.SBS96.all ./Unclustered
     
-    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig}
-    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig}
-    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig}
+    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
+    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
+    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
     
     cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Closer_denovo.txt
     cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Closer_decomp.txt
