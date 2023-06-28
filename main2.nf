@@ -234,7 +234,7 @@ process count_mutations {
     path "*" from to_count.collect()
 
     output:
-    path("*.all").map { file -> [file.name.split("\\.")[0], file] } into counts
+    path("*.all") into counts_all
 
     shell:
     '''
@@ -251,6 +251,8 @@ process count_mutations {
     cp ./unclustered_VCFs/output/SBS/unclustered.SBS96.all ./
    '''     
 }
+
+counts_all.map { file -> [file.baseName, file] }.set { counts }
 
 process get_signatures {
     cpus = params.sig_cores
