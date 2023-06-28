@@ -303,39 +303,39 @@ process get_signatures {
 //    '''
 //}
 
-snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
+//snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
 
-process snv_annotation {
-       tag { sample }
-       cpus = params.cores
-       errorStrategy 'retry'
-       memory { 10.GB * task.attempt }
+//process snv_annotation {
+//       tag { sample }
+//       cpus = params.cores
+//       errorStrategy 'retry'
+//       memory { 10.GB * task.attempt }
 
-       publishDir params.output_folder+"/Plots/SNVs", mode: 'move', pattern: '*_plots.pdf'
-       publishDir params.output_folder+"/Annotated-SNVs", mode: 'move', pattern: '*_annotated.tsv'
+//       publishDir params.output_folder+"/Plots/SNVs", mode: 'move', pattern: '*_plots.pdf'
+//       publishDir params.output_folder+"/Annotated-SNVs", mode: 'move', pattern: '*_annotated.tsv'
     
-       input:
-       tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
+//       input:
+//       tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
        //tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
        //path "*" from probabilities.collect()
-       path input_file  
-       path chr from chr_sizes
-       path vcfanno_conf
+//       path input_file  
+//       path chr from chr_sizes
+//       path vcfanno_conf
 
        //output:
        //tuple val(sample), file("${sample}_annotated.tsv"), file("${sample}_plots.pdf") 
        
-       shell:
-       '''
-       vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf
-       bgzip !{sample}.snv.filt.svsnv.ann.vcf
-       tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
-       vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
-       echo !{sizeunclustered}
-       #Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} !{closer_decomp} !{closer_denovo} !{close_decomp} !{close_denovo} !{unclustered_decomp} !{unclustered_denovo}  
+//       shell:
+//       '''
+//       vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf
+//       bgzip !{sample}.snv.filt.svsnv.ann.vcf
+//       tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
+//       vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
+//       echo !{sizeunclustered}
+//       #Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} !{closer_decomp} !{closer_denovo} !{close_decomp} !{close_denovo} !{unclustered_decomp} !{unclustered_denovo}  
 
-       '''
-}
+//       '''
+//}
 
 sv_filter.flatten()
                .collate( 2 )
