@@ -286,6 +286,8 @@ snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).j
 
 process snv_annotation {
        tag { sample }
+       publishDir params.output_folder+"/Plots/SNV-SNV", mode: 'move', pattern: '*_plot.pdf'
+    
        input:
        tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
        tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
