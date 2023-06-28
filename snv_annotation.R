@@ -183,7 +183,7 @@ decomp_sig_colors = decomp_sig_colors[decomp_sig_levels %in% unique(tsv$Signatur
 #reorder points so that Closer/close overlap all others
 tsv=tsv; tsv$z="a"
 tsv$z[tsv$SVSNV %in% c("CLOSE","CLOSER")] <- "b"
-tsv$z[tsv$SNV_ClusterType %in% c("Kataegis","Omikli","DSB","MBS")] <- "b"
+tsv$z[tsv$SNV_ClusterType %in% c("Kataegis","Omikli","DBS","MBS")] <- "b"
 tsv <- tsv[order(tsv$z), ]
 
 ### SV-SNV clusters SBS6 plot ###
