@@ -261,7 +261,7 @@ process get_signatures {
     path count from counts
 
     output:
-    tuple val(name), path("${name}_denovo.txt"), path("${name}_decomp.txt") into probabilities 
+    tuple path("${name}_denovo.txt"), path("${name}_decomp.txt") into probabilities 
 
     shell:
     '''
