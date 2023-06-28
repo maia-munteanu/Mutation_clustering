@@ -168,7 +168,7 @@ process get_sv_snv_clusters {
        output:
        tuple val(sample), file("${sample}.snv.filt.svsnv.vcf.gz"), optional: true into annotate_snvs
        tuple file("${sample}.snv.closer.vcf"), file("${sample}.snv.close.vcf"), file("${sample}.snv.unclustered.vcf"), optional: true into to_count
-       tuple val(sample), env(filter), env(ratio), env(rcloser), env(rclose), env(runclustered), env(ocloser), env(oclose), env(ounclustered), env(sizecloser), env(sizeclose), env(sizeunclustered.toString()) into(snv_filter, sample_info)
+       tuple val(sample), env(filter), env(ratio), env(rcloser), env(rclose), env(runclustered), env(ocloser), env(oclose), env(ounclustered), env(sizecloser), env(sizeclose), env(sizeunclustered) into(snv_filter, sample_info)
 
        shell:
        '''
