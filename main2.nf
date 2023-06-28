@@ -287,7 +287,7 @@ snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).j
 process snv_annotation {
        tag { sample }
        publishDir params.output_folder+"/Plots/SNVs", mode: 'move', pattern: '*_plot.pdf'
-       publishDir params.output_folder+"/Annotated", mode: 'move', pattern: '*_annotated.tsv'
+       publishDir params.output_folder+"/Annotated-SNVs", mode: 'move', pattern: '*_annotated.tsv'
     
        input:
        tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
