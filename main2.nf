@@ -252,7 +252,6 @@ process count_mutations {
    '''     
 }
 
-counts_all.flatten().set { flattened_counts_all }
 counts = counts_all.flatten().view()
 
 process get_signatures {
