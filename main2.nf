@@ -256,7 +256,6 @@ counts = counts_all.flatten().view()
 
 process get_signatures {
     cpus = params.sig_cores
-    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: "$name/**"
 
     input:
     path count from counts
