@@ -13,6 +13,7 @@ params.random_iter = 5
 params.random_batch = 2500
 params.svsnv_threshold = 0.2
 params.cores = 8
+params.sig_cores = 16
 params.minsig = 1
 params.maxsig = 4
 params.assembly = "hg19"
@@ -252,6 +253,8 @@ process count_mutations {
 }
 
 process get_signatures {
+    cpus = params.sig_cores
+
     publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Closer'
     publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Close'
     publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Unclustered'
@@ -286,6 +289,8 @@ snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).j
 
 process snv_annotation {
        tag { sample }
+       cpus = params.cores
+
        publishDir params.output_folder+"/Plots/SNVs", mode: 'move', pattern: '*_plot.pdf'
        publishDir params.output_folder+"/Annotated-SNVs", mode: 'move', pattern: '*_annotated.tsv'
     
