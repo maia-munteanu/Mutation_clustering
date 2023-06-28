@@ -264,7 +264,7 @@ process get_signatures {
 
     output:
     tuple path("*denovo.txt"), path("*decomp.txt") into probabilities
-    path("./$name")
+    path("./\\$name")
 
     shell:
     '''
