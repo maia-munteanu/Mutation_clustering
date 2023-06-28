@@ -260,9 +260,6 @@ process get_signatures {
     input:
     path count from counts
 
-    output:
-    tuple path("${name}_denovo.txt"), path("${name}_decomp.txt") into probabilities 
-
     shell:
     '''
     echo !{count}
