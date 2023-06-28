@@ -261,6 +261,8 @@ process get_signatures {
     shell:
     '''
     echo !{count}
+    name=$(echo !{count} | awk -F'.' '{print \$1}')
+    echo $name
     '''
 }
 
