@@ -252,26 +252,21 @@ process count_mutations {
    '''     
 }
 
-counts = counts_all.flatten().map { file -> [file.baseName.split("\\.")[0], file] }.view()
-
 process get_signatures {
     cpus = params.sig_cores
 
     input:
-    tuple val(name), path(counts) from counts
+    path counts from counts_all
 
     output:
     tuple val(name), path("${name}_denovo.txt"), path("${name}_decomp.txt") into probabilities 
 
     script:
     '''
-    echo !{name}
-    echo ${name}
-    echo ${counts}
     echo !{counts}
-    python3 !{baseDir}/SignatureExtractor.py "./Signatures" "./!{counts}" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-    cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./!{name}_denovo.txt
-    cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./!{name}_decomp.txt
+    //python3 !{baseDir}/SignatureExtractor.py "./Signatures" "./!{counts}" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
+    //cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./!{name}_denovo.txt
+    //cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./!{name}_decomp.txt
     '''
 }
 
