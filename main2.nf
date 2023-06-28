@@ -317,7 +317,7 @@ process snv_annotation {
        input:
        tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
        //tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
-       path "*" from probabilities.collect()
+       //path "*" from probabilities.collect()
        path input_file  
        path chr from chr_sizes
        path vcfanno_conf
