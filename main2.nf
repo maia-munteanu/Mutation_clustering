@@ -289,11 +289,12 @@ process snv_annotation {
        input:
        tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
        tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
+       path input_file  
+       path chr from chr_sizes
        path vcfanno_conf
-       path params.input_file
 
        output:
-       tuple val(sample), file("${sample}.snv.clusters.tsv") into dataframes 
+       tuple val(sample), file("${sample}_annotated.tsv"), file("${sample}_plots.pdf") 
        
        shell:
        '''
@@ -301,30 +302,8 @@ process snv_annotation {
        bgzip !{sample}.snv.filt.svsnv.ann.vcf
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
        vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
-       Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value}
+       Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} !{closer_decomp} !{closer_denovo} !{close_decomp} !{close_denovo} !{unclustered_decomp} !{unclustered_denovo}  
 
-input_file=fread(args[4])
-assembly=args[5]
-chr_sizes=fread(args[6]); colnames(chr_sizes)=c("CHROM","SIZE")
-name=args[7]
-tsv=fread(args[8])
-snvsnv=fread(args[9])
-sv=fread(args[10])
-ratio=as.numeric(args[11])
-ocloser=as.integer(args[12])
-oclose=as.integer(args[13])
-ounclustered=as.integer(args[14])
-sizecloser=as.integer(args[15])
-sizeclose=as.integer(args[16])
-sizeunclustered=as.integer(args[17])
-closer_decomp=fread(args[18])
-closer_denovo=fread(args[19])
-close_decomp=fread(args[20])
-close_denovo=fread(args[21])
-unclustered_decomp=fread(args[22])
-unclustered_denovo=fread(args[23])
-      
-       echo !{ratio} !{rcloser} !{rclose} !{runclustered} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered}
        '''
 }
 
