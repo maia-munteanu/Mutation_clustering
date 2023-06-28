@@ -234,7 +234,7 @@ process count_mutations {
     path "*" from to_count.collect()
 
     output:
-    path "*.all" into counts
+    path("*.all").map { file -> [file.name.split("\\.")[0], file] } into counts
 
     shell:
     '''
@@ -255,35 +255,54 @@ process count_mutations {
 process get_signatures {
     cpus = params.sig_cores
 
-    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Closer'
-    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Close'
-    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Unclustered'
-    
     input:
-    path "*" from counts
-    
+    tuple val(name), path(counts) from counts
+
     output:
-    tuple path("Closer_denovo.txt"), path("Closer_decomp.txt"), path("Close_denovo.txt"), path("Close_decomp.txt"), path("Unclustered_denovo.txt"), path("Unclustered_decomp.txt") into probabilities 
-    tuple path("./Closer"), path("./Close"), path("./Unclustered")
-    
-    shell:
-    '''
-    mkdir Closer && mv closer.SBS96.all ./Closer
-    mkdir Close && mv close.SBS96.all ./Close
-    mkdir Unclustered && mv unclustered.SBS96.all ./Unclustered
-    
-    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-    
-    cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Closer_denovo.txt
-    cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Closer_decomp.txt
-    cp ./Close/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Close_denovo.txt
-    cp ./Close/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Close_decomp.txt
-    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Unclustered_denovo.txt
-    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Unclustered_decomp.txt
-    '''
+    tuple val(name), path("${name}_denovo.txt"), path("${name}_decomp.txt") into probabilities 
+
+    script:
+    """
+    mkdir ${name} && mv ${counts} ./${name}
+    python3 ${params.baseDir}/SignatureExtractor.py "./${name}/Signatures" "./${name}/${counts}" ${params.sigproassembly} ${params.minsig} ${params.maxsig} ${params.sig_cores}
+    cp ./${name}/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./${name}_denovo.txt
+    cp ./${name}/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./${name}_decomp.txt
+    """
 }
+
+
+//process get_signatures {
+//    cpus = params.sig_cores
+
+//    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Closer'
+//    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Close'
+//    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Unclustered'
+    
+//    input:
+//    path "*" from counts
+    
+//    output:
+//    tuple path("Closer_denovo.txt"), path("Closer_decomp.txt"), path("Close_denovo.txt"), path("Close_decomp.txt"), path("Unclustered_denovo.txt"), path("Unclustered_decomp.txt") into probabilities 
+//    tuple path("./Closer"), path("./Close"), path("./Unclustered")
+    
+//    shell:
+//    '''
+//    mkdir Closer && mv closer.SBS96.all ./Closer
+//    mkdir Close && mv close.SBS96.all ./Close
+//    mkdir Unclustered && mv unclustered.SBS96.all ./Unclustered
+    
+//    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
+//    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
+//    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
+    
+//    cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Closer_denovo.txt
+//    cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Closer_decomp.txt
+//    cp ./Close/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Close_denovo.txt
+//    cp ./Close/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Close_decomp.txt
+//    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Unclustered_denovo.txt
+//    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Unclustered_decomp.txt
+//    '''
+//}
 
 snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
 
@@ -298,13 +317,14 @@ process snv_annotation {
     
        input:
        tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
-       tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
+       //tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
+       path "*" from probabilities.collect()
        path input_file  
        path chr from chr_sizes
        path vcfanno_conf
 
-       output:
-       tuple val(sample), file("${sample}_annotated.tsv"), file("${sample}_plots.pdf") 
+       //output:
+       //tuple val(sample), file("${sample}_annotated.tsv"), file("${sample}_plots.pdf") 
        
        shell:
        '''
@@ -313,7 +333,7 @@ process snv_annotation {
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
        vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
        echo !{sizeunclustered}
-       Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} !{closer_decomp} !{closer_denovo} !{close_decomp} !{close_denovo} !{unclustered_decomp} !{unclustered_denovo}  
+       #Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} !{closer_decomp} !{closer_denovo} !{close_decomp} !{close_denovo} !{unclustered_decomp} !{unclustered_denovo}  
 
        '''
 }
