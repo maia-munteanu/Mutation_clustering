@@ -252,15 +252,15 @@ process count_mutations {
    '''     
 }
 
-counts_files = counts_all.flatten().view()
+counts = counts_all.flatten().view()
 
-process process_individual_files {
+process get_signatures {
     input:
-    path counts_file from counts_files
+    path count from counts
 
     shell:
     '''
-    echo !{counts_file}
+    echo !{count}
     '''
 }
 
