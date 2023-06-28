@@ -67,7 +67,7 @@ if (params.chr_sizes){
 }
 
 sv_list = Channel.fromPath(input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
-                   .map{ row -> [ row.sample, file(row.sv), file(row.linx) ] }
+                   .map{ row -> [ row.sample, file(row.sv), file(row.linx) ] }.view()
 
 process parse_svs {
        tag { sample }
