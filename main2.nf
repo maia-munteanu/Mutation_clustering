@@ -66,7 +66,7 @@ if (params.chr_sizes){
     }
 }
 
-sv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
+sv_list = Channel.fromPath(input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.sv), file(row.linx) ] }
 
 process parse_svs {
@@ -115,7 +115,7 @@ process parse_svs {
        '''
 }
 
-snv_list = Channel.fromPath(params.input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
+snv_list = Channel.fromPath(input_file, checkIfExists: true).splitCsv(header: true, sep: '\t', strip: true)
                    .map{ row -> [ row.sample, file(row.snv) ] }.join(svs_exist).map{ sample, snv, bed -> [ sample, snv ] }
 
 process parse_snvs {
