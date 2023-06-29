@@ -258,7 +258,7 @@ process get_signatures {
     tag { name }
     cpus = params.sig_cores
 
-    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './${name}'
+    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './{name}'
 
     input:
     tuple val(name), path(count) from counts
