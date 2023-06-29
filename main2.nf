@@ -307,7 +307,7 @@ process snv_annotation {
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
        vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
        echo !{sizeunclustered}
-       Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} closer_decomp.txt closer_denovo.txt close_decomp.txt close_denovo.txt unclustered_decomp.txt unclustered_denovo.txt  
+       Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} Closer_decomp.txt Closer_denovo.txt Close_decomp.txt Close_denovo.txt Unclustered_decomp.txt Unclustered_denovo.txt  
        '''
 }
 
