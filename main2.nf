@@ -257,14 +257,14 @@ counts = counts_all.flatten().view()
 process get_signatures {
     cpus = params.sig_cores
 
-    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './*signatures'
+    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './*_signatures'
 
     input:
     path count from counts
 
     output:
     tuple path("*denovo.txt"), path("*decomp.txt") into probabilities
-    path("./*signatures")
+    path("./*_signatures")
 
     shell:
     '''
@@ -273,9 +273,9 @@ process get_signatures {
     echo $name
 
     python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-    cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./\\$name_denovo.txt
-    cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./\\$name_decomp.txt
-    mv ./Signatures ./\\$name_signatures
+    cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./$name_denovo.txt
+    cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./$name_decomp.txt
+    mv ./Signatures ./$name_signatures
     '''
 }
 
