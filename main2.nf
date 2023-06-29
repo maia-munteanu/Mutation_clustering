@@ -257,14 +257,14 @@ counts = counts_all.flatten().view()
 process get_signatures {
     cpus = params.sig_cores
 
-    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './*_signatures/'
+    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './*_signatures/*'
 
     input:
     path count from counts
 
     output:
     tuple path("*denovo.txt"), path("*decomp.txt") into probabilities
-    path("./*_signatures/")
+    path("./*_signatures/*")
 
     shell:
     '''
