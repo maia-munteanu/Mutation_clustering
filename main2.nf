@@ -272,7 +272,7 @@ process get_signatures {
     python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
     cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./!{name}_denovo.txt
     cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./!{name}_decomp.txt
-    mv ./Signatures/SBS96 ./!{name}_SBS96
+    mv ./Signatures ./!{name}_SBS96
     '''
 }
 
