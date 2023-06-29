@@ -255,23 +255,24 @@ process count_mutations {
 counts = counts_all.flatten().map { file -> [file.baseName, file] }.view()
 
 process get_signatures {
+    tag { name }
     cpus = params.sig_cores
 
-    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './${name}/'
+    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './*_SBS96'
 
     input:
     tuple val(name), path(count) from counts
 
     output:
     tuple path("*denovo.txt"), path("*decomp.txt") into probabilities
-    path("./${name}")
+    path("./${name}_SBS96")
 
     shell:
     '''
     python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
     cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./!{name}_denovo.txt
     cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./!{name}_decomp.txt
-    mv ./Signatures ./!{name}
+    mv ./Signatures/SBS96 ./!{name}_SBS96
     '''
 }
 
