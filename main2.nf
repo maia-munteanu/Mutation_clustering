@@ -257,7 +257,7 @@ counts = counts_all.flatten().map { file -> [file.baseName, file] }.view()
 process get_signatures {
     cpus = params.sig_cores
 
-    publishDir "${params.output_folder}/Signatures", mode: 'move', pattern: "./${name}"
+    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './${name}'
 
     input:
     tuple val(name), path(count) from counts
