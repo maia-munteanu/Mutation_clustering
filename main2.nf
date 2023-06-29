@@ -172,10 +172,6 @@ process get_sv_snv_clusters {
 
        shell:
        '''
-       #sizecloser=$(grep -w CLOSER !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
-       #sizeclose=$(grep -w CLOSE !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
-       #sizeunclustered=$(grep -w UNCLUSTERED !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
-
        sizecloser=$(grep -w CLOSER !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{printf "%.0f", SUM}')
        sizeclose=$(grep -w CLOSE !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{printf "%.0f", SUM}')
        sizeunclustered=$(grep -w UNCLUSTERED !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=\$3-\$2 }END{printf "%.0f", SUM}')
@@ -283,73 +279,37 @@ process get_signatures {
     '''
 }
 
+snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
 
-//process get_signatures {
-//    cpus = params.sig_cores
+process snv_annotation {
+       tag { sample }
+       cpus = params.cores
+       errorStrategy 'retry'
+       memory { 10.GB * task.attempt }
 
-//    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Closer'
-//    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Close'
-//    publishDir params.output_folder+"/Signatures/", mode: 'move', pattern: './Unclustered'
+       publishDir params.output_folder+"/Plots/SNVs", mode: 'move', pattern: '*_plots.pdf'
+       publishDir params.output_folder+"/Annotated-SNVs", mode: 'move', pattern: '*_annotated.tsv'
     
-//    input:
-//    path "*" from counts
-    
-//    output:
-//    tuple path("Closer_denovo.txt"), path("Closer_decomp.txt"), path("Close_denovo.txt"), path("Close_decomp.txt"), path("Unclustered_denovo.txt"), path("Unclustered_decomp.txt") into probabilities 
-//    tuple path("./Closer"), path("./Close"), path("./Unclustered")
-    
-//    shell:
-//    '''
-//    mkdir Closer && mv closer.SBS96.all ./Closer
-//    mkdir Close && mv close.SBS96.all ./Close
-//    mkdir Unclustered && mv unclustered.SBS96.all ./Unclustered
-    
-//    python3 !{baseDir}/SignatureExtractor.py "./Closer/Signatures" "./Closer/closer.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-//    python3 !{baseDir}/SignatureExtractor.py "./Close/Signatures" "./Close/close.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-//    python3 !{baseDir}/SignatureExtractor.py "./Unclustered/Signatures" "./Unclustered/unclustered.SBS96.all" !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-    
-//    cp ./Closer/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Closer_denovo.txt
-//    cp ./Closer/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Closer_decomp.txt
-//    cp ./Close/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Close_denovo.txt
-//    cp ./Close/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Close_decomp.txt
-//    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./Unclustered_denovo.txt
-//    cp ./Unclustered/Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./Unclustered_decomp.txt
-//    '''
-//}
+       input:
+       tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
+       path "*" from probabilities.collect()
+       path input_file  
+       path chr from chr_sizes
+       path vcfanno_conf
 
-//snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
-
-//process snv_annotation {
-//       tag { sample }
-//       cpus = params.cores
-//       errorStrategy 'retry'
-//       memory { 10.GB * task.attempt }
-
-//       publishDir params.output_folder+"/Plots/SNVs", mode: 'move', pattern: '*_plots.pdf'
-//       publishDir params.output_folder+"/Annotated-SNVs", mode: 'move', pattern: '*_annotated.tsv'
-    
-//       input:
-//       tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
-       //tuple path(closer_denovo), path(closer_decomp), path(close_denovo), path(close_decomp), path(unclustered_denovo), path(unclustered_decomp) from probabilities
-       //path "*" from probabilities.collect()
-//       path input_file  
-//       path chr from chr_sizes
-//       path vcfanno_conf
-
-       //output:
-       //tuple val(sample), file("${sample}_annotated.tsv"), file("${sample}_plots.pdf") 
+       output:
+       tuple val(sample), file("${sample}_annotated.tsv"), file("${sample}_plots.pdf") 
        
-//       shell:
-//       '''
-//       vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf
-//       bgzip !{sample}.snv.filt.svsnv.ann.vcf
-//       tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
-//       vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
-//       echo !{sizeunclustered}
-//       #Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} !{closer_decomp} !{closer_denovo} !{close_decomp} !{close_denovo} !{unclustered_decomp} !{unclustered_denovo}  
-
-//       '''
-//}
+       shell:
+       '''
+       vcfanno_linux64  !{vcfanno_conf} !{vcf} > !{sample}.snv.filt.svsnv.ann.vcf
+       bgzip !{sample}.snv.filt.svsnv.ann.vcf
+       tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
+       vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
+       echo !{sizeunclustered}
+       Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} closer_decomp.txt closer_denovo.txt close_decomp.txt close_denovo.txt unclustered_decomp.txt unclustered_denovo.txt  
+       '''
+}
 
 sv_filter.flatten()
                .collate( 2 )
