@@ -257,26 +257,21 @@ counts = counts_all.flatten().map { file -> [file.baseName, file] }.view()
 process get_signatures {
     cpus = params.sig_cores
 
-    publishDir "${params.output_folder}/Signatures", mode: 'move', pattern: "${name}_signatures/*"
+    publishDir "${params.output_folder}/Signatures", mode: 'move', pattern: "./${name}/"
 
     input:
     tuple val(name), path(count) from counts
 
-    //output:
-    //tuple path("*denovo.txt"), path("*decomp.txt") into probabilities
-    //path("${name}_signatures/*")
+    output:
+    tuple path("*denovo.txt"), path("*decomp.txt") into probabilities
+    path("./${name}_signatures")
 
     shell:
     '''
-    echo !{name}
-    #echo !{count}
-    #name=$(echo !{count} | awk -F'.' '{print \$1}')
-    #echo $name
-
-    #python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-    #cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt "$(echo "${name}_denovo.txt")"
-    #cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt "$(echo "${name}_decomp.txt")"
-    #mv "Signatures" "$(echo "${name}_signatures")"
+    python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
+    cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt ./!{name}_denovo.txt
+    cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt ./!{name}_decomp.txt
+    mv ./Signatures ./!{name}
     '''
 }
 
