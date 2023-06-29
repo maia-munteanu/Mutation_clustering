@@ -246,13 +246,13 @@ process count_mutations {
     python3 !{baseDir}/MatrixGenerator.py "Close" !{params.sigproassembly} "./close_VCFs/"
     python3 !{baseDir}/MatrixGenerator.py "Unclustered" !{params.sigproassembly} "./unclustered_VCFs/"
     
-    cp ./closer_VCFs/output/SBS/Closer.SBS96.all ./
-    cp ./close_VCFs/output/SBS/Close.SBS96.all ./
-    cp ./unclustered_VCFs/output/SBS/Unclustered.SBS96.all ./
+    cp ./closer_VCFs/output/SBS/Closer.SBS96.all ./Closer.all
+    cp ./close_VCFs/output/SBS/Close.SBS96.all ./Close.all
+    cp ./unclustered_VCFs/output/SBS/Unclustered.SBS96.all ./Unclustered.all
    '''     
 }
 
-counts = counts_all.flatten().view()
+counts = counts_all.flatten()..map { file -> [file.baseName, file] }.view()
 
 process get_signatures {
     cpus = params.sig_cores
@@ -260,22 +260,23 @@ process get_signatures {
     publishDir "${params.output_folder}/Signatures", mode: 'move', pattern: "${name}_signatures/*"
 
     input:
-    path count from counts
+    tuple val(name), path(count) from counts
 
-    output:
-    tuple path("*denovo.txt"), path("*decomp.txt") into probabilities
-    path("${name}_signatures/*")
+    //output:
+    //tuple path("*denovo.txt"), path("*decomp.txt") into probabilities
+    //path("${name}_signatures/*")
 
     shell:
     '''
-    echo !{count}
-    name=$(echo !{count} | awk -F'.' '{print \$1}')
-    echo $name
+    echo !{name}
+    #echo !{count}
+    #name=$(echo !{count} | awk -F'.' '{print \$1}')
+    #echo $name
 
-    python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
-    cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt "$(echo "${name}_denovo.txt")"
-    cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt "$(echo "${name}_decomp.txt")"
-    mv "Signatures" "$(echo "${name}_signatures")"
+    #python3 !{baseDir}/SignatureExtractor.py "./Signatures" !{count} !{params.sigproassembly} !{params.minsig} !{params.maxsig} !{params.sig_cores}
+    #cp ./Signatures/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt "$(echo "${name}_denovo.txt")"
+    #cp ./Signatures/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt "$(echo "${name}_decomp.txt")"
+    #mv "Signatures" "$(echo "${name}_signatures")"
     '''
 }
 
