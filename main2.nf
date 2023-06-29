@@ -206,6 +206,9 @@ process get_sv_snv_clusters {
              echo "Sample does not have SV-SNV clusters"; rm !{sample}.snv.filt.svsnv.vcf.gz; 
              filter="SNV-FILTER-1"; ratio=0
        fi  
+       echo $sizecloser 
+       echo $sizeclose 
+       echo $sizeunclustered
        '''
 }
 
