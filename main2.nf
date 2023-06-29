@@ -172,9 +172,14 @@ process get_sv_snv_clusters {
 
        shell:
        '''
-       sizecloser=$(grep -w CLOSER !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
-       sizeclose=$(grep -w CLOSE !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
-       sizeunclustered=$(grep -w UNCLUSTERED !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
+       #sizecloser=$(grep -w CLOSER !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
+       #sizeclose=$(grep -w CLOSE !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
+       #sizeunclustered=$(grep -w UNCLUSTERED !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0}{ SUM+=$3-$2 }END{print SUM}')
+
+       sizecloser=$(grep -w CLOSER !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0; OFMT="%10.10f"}{ SUM+=\$3-\$2 }END{print SUM * (10 ^ 0)}')
+       sizeclose=$(grep -w CLOSE !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0; OFMT="%10.10f"}{ SUM+=\$3-\$2 }END{print SUM * (10 ^ 0)}')
+       sizeunclustered=$(grep -w UNCLUSTERED !{sample}.sv_snv.ann.bed | awk -F'\t' 'BEGIN{SUM=0; OFMT="%10.10f"}{ SUM+=\$3-\$2 }END{print SUM * (10 ^ 0)}')
+
        
        bgzip !{sample}.sv_snv.ann.bed
        tabix -p bed !{sample}.sv_snv.ann.bed.gz
