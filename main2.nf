@@ -306,7 +306,6 @@ process snv_annotation {
        bgzip !{sample}.snv.filt.svsnv.ann.vcf
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
        vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
-       echo !{sizeunclustered}
        Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} Closer_decomp.txt Closer_denovo.txt Close_decomp.txt Close_denovo.txt Unclustered_decomp.txt Unclustered_denovo.txt  
        '''
 }
