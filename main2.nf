@@ -15,12 +15,12 @@ params.svsnv_threshold = 0.2
 params.cores = 8
 params.sig_cores = 32
 params.minsig = 1
-params.maxsig = 1
+params.maxsig = 10
 params.assembly = "hg19"
 params.sigproassembly = "GRCh37"
 
 
-params.input_file = "/g/strcombio/fsupek_cancer1/SV_clusters_project/input2.tsv"
+params.input_file = "/g/strcombio/fsupek_cancer1/SV_clusters_project/input.tsv"
 params.output_folder = "/g/strcombio/fsupek_cancer1/SV_clusters_project/Main2Results"
 params.mappability = "/home/mmunteanu/reference/CRG75_nochr.bed"
 params.reference = "/g/strcombio/fsupek_cancer1/SV_clusters_project/hg19.fasta"
