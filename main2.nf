@@ -293,7 +293,7 @@ process snv_annotation {
        tag { sample }
        cpus = params.cores
        errorStrategy 'retry'
-       memory { 10.GB * task.attempt }
+       memory { 15.GB * task.attempt }
 
        publishDir params.output_folder+"/Plots/SNVs", mode: 'move', pattern: '*_plots.pdf'
        publishDir params.output_folder+"/Annotated-SNVs", mode: 'move', pattern: '*_annotated.tsv'
