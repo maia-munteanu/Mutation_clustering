@@ -17,9 +17,9 @@ dnaRevCompl <- function(nucSeq){return(stri_reverse(chartr("acgtACGT", "tgcaTGCA
 
 args=commandArgs(TRUE)
 
-cores=as.numeric(args[1])
-closer=as.numeric(args[2])
-close=numeric(args[3])
+cores=as.integer(args[1])
+closer=as.integer(args[2])
+close=as.integer(args[3])
 input_file=fread(args[4])
 assembly=args[5]
 chr_sizes=fread(args[6]); colnames(chr_sizes)=c("CHROM","SIZE")
