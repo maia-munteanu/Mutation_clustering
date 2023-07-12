@@ -17,9 +17,9 @@ dnaRevCompl <- function(nucSeq){return(stri_reverse(chartr("acgtACGT", "tgcaTGCA
 
 args=commandArgs(TRUE)
 
-cores=as.integer(args[1])
-closer=as.integer(args[2])
-close=as.integer(args[3])
+cores=as.numeric(args[1])
+closer=as.numeric(args[2])
+close=numeric(args[3])
 input_file=fread(args[4])
 assembly=args[5]
 chr_sizes=fread(args[6]); colnames(chr_sizes)=c("CHROM","SIZE")
@@ -28,17 +28,12 @@ tsv=fread(args[8])
 snvsnv=fread(args[9])
 sv=fread(args[10])
 ratio=as.numeric(args[11])
-ocloser=as.integer(args[12])
-oclose=as.integer(args[13])
-ounclustered=as.integer(args[14])
-sizecloser=as.integer(args[15])
-sizeclose=as.integer(args[16])
-
-#sizeunclustered=as.integer(args[17])
-sizeunclustered=args[17]
-print(sizeunclustered)
-print(str(sizeunclustered))
-
+ocloser=as.numeric(args[12])
+oclose=as.numeric(args[13])
+ounclustered=as.numeric(args[14])
+sizecloser=as.numeric(args[15])
+sizeclose=as.numeric(args[16])
+sizeunclustered=as.numeric(args[17])
 closer_decomp=fread(args[18])
 closer_denovo=fread(args[19])
 close_decomp=fread(args[20])
