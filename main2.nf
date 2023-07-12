@@ -281,12 +281,12 @@ process get_signatures {
 
 snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
 
-closer_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/closer_decomp.txt")
-closer_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/closer_denovo.txt")
-close_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/close_decomp.txt")
-close_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/close_denovo.txt")
-unclustered_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/unclustered_decomp.txt")
-unclustered_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/unclustered_denovo.txt")
+closer_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Closer_decomp.txt")
+closer_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Closer_denovo.txt")
+close_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Close_decomp.txt")
+close_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Close_denovo.txt")
+unclustered_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Unclustered_decomp.txt")
+unclustered_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Unclustered_denovo.txt")
 
 process snv_annotation {
        tag { sample }
@@ -303,12 +303,12 @@ process snv_annotation {
        path input_file  
        path chr from chr_sizes
        path vcfanno_conf
-       file closer_decomp
-       file closer_denovo
-       file close_decomp
-       file close_denovo
-       file unclustered_decomp
-       file unclustered_denovo
+       file Closer_decomp
+       file Closer_denovo
+       file Close_decomp
+       file Close_denovo
+       file Unclustered_decomp
+       file Unclustered_denovo
 
        output:
        tuple val(sample), file("${sample}_annotated.tsv"), file("${sample}_plots.pdf") 
