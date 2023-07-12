@@ -281,6 +281,13 @@ process get_signatures {
 
 snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
 
+closer_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Closer_mutations_output/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt")
+closer_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Closer_mutations_output/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt")
+close_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Close_mutations_output/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt")
+close_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Close_mutations_output/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt")
+unclustered_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Unclustered_mutations_output/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt")
+unclustered_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Unclustered_mutations_output/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt")
+
 process snv_annotation {
        tag { sample }
        cpus = params.cores
@@ -306,7 +313,9 @@ process snv_annotation {
        bgzip !{sample}.snv.filt.svsnv.ann.vcf
        tabix -p vcf !{sample}.snv.filt.svsnv.ann.vcf.gz
        vcf2tsv -n NA !{sample}.snv.filt.svsnv.ann.vcf.gz > !{sample}.snv.filt.svsnv.ann.tsv
-       Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} Closer_decomp.txt Closer_denovo.txt Close_decomp.txt Close_denovo.txt Unclustered_decomp.txt Unclustered_denovo.txt  
+       #Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} Closer_decomp.txt Closer_denovo.txt Close_decomp.txt Close_denovo.txt Unclustered_decomp.txt Unclustered_denovo.txt
+       Rscript !{baseDir}/snv_annotation.R !{params.cores} !{params.closer_value} !{params.close_value} !{input_file} !{params.assembly} !{chr} !{sample} !{sample}.snv.filt.svsnv.ann.tsv !{snvsnv} !{sv} !{ratio} !{ocloser} !{oclose} !{ounclustered} !{sizecloser} !{sizeclose} !{sizeunclustered} !{closer_decomp} !{closer_denovo} !{close_decomp} !{close_denovo} !{unclustered_decomp} !{unclustered_denovo}
+
        '''
 }
 
