@@ -303,7 +303,12 @@ process snv_annotation {
        path input_file  
        path chr from chr_sizes
        path vcfanno_conf
-       tuple path(closer_decomp), path(closer_denovo), path(close_decomp), path(close_denovo), path(unclustered_decomp), path(unclustered_denovo)
+       file closer_decomp
+       file closer_denovo
+       file close_decomp
+       file close_denovo
+       file unclustered_decomp
+       file unclustered_denovo
 
        output:
        tuple val(sample), file("${sample}_annotated.tsv"), file("${sample}_plots.pdf") 
