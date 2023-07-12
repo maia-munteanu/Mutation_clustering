@@ -281,13 +281,6 @@ process get_signatures {
 
 snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
 
-closer_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Closer_decomp.txt")
-closer_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Closer_denovo.txt")
-close_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Close_decomp.txt")
-close_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Close_denovo.txt")
-unclustered_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Unclustered_decomp.txt")
-unclustered_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/Unclustered_denovo.txt")
-
 process snv_annotation {
        tag { sample }
        cpus = params.cores
@@ -299,16 +292,10 @@ process snv_annotation {
     
        input:
        tuple val(sample), file(vcf), file(snvsnv), file(sv), val(filter), val(ratio), val(rcloser), val(rclose), val(runclustered), val(ocloser), val(oclose), val(ounclustered), val(sizecloser), val(sizeclose), val(sizeunclustered) from snv_to_annotate 
-       //path "*" from probabilities.collect()
+       path "*" from probabilities.collect()
        path input_file  
        path chr from chr_sizes
        path vcfanno_conf
-       path closer_decomp
-       path closer_denovo
-       path close_decomp
-       path close_denovo
-       path unclustered_decomp
-       path unclustered_denovo
 
        output:
        tuple val(sample), file("${sample}_annotated.tsv"), file("${sample}_plots.pdf") 
