@@ -281,12 +281,12 @@ process get_signatures {
 
 snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
 
-closer_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Closer_mutations_output/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt")
-closer_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Closer_mutations_output/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt")
-close_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Close_mutations_output/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt")
-close_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Close_mutations_output/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt")
-unclustered_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Unclustered_mutations_output/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt")
-unclustered_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Unclustered_mutations_output/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt")
+closer_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/closer_decomp.txt")
+closer_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/closer_denovo.txt")
+close_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/close_decomp.txt")
+close_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/close_denovo.txt")
+unclustered_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/unclustered_decomp.txt")
+unclustered_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/Probabilities/unclustered_denovo.txt")
 
 process snv_annotation {
        tag { sample }
