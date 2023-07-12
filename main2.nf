@@ -280,7 +280,7 @@ process get_signatures {
 }
 
 snv_to_annotate = annotate_snvs.join(snv_clusters).join(annotate_with_sv_info).join(sample_info)
-probs = probabilities.collect()
+probs = probabilities.collectFile().view()
 
 closer_decomp=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Closer_mutations_output/SBS96/Suggested_Solution/COSMIC_SBS96_Decomposed_Solution/Activities/Decomposed_Mutation_Probabilities.txt")
 closer_denovo=file("/g/strcombio/fsupek_cancer1/SV_clusters_project/SigProfiler/Closer_mutations_output/SBS96/Suggested_Solution/SBS96_De-Novo_Solution/Activities/De_Novo_Mutation_Probabilities_refit.txt")
