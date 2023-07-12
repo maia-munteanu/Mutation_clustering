@@ -33,7 +33,12 @@ oclose=as.integer(args[13])
 ounclustered=as.integer(args[14])
 sizecloser=as.integer(args[15])
 sizeclose=as.integer(args[16])
-sizeunclustered=as.integer(args[17])
+
+#sizeunclustered=as.integer(args[17])
+sizeunclustered=args[17]
+print(sizeunclustered)
+print(str(sizeunclustered))
+
 closer_decomp=fread(args[18])
 closer_denovo=fread(args[19])
 close_decomp=fread(args[20])
