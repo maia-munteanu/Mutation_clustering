@@ -188,7 +188,7 @@ tsv <- tsv[order(tsv$z), ]
 
 ### SV-SNV clusters SBS6 plot ###
 ggplot(data = tsv, aes(x = POS_ABS, y = as.numeric(IMD))) +
-  geom_vline(aes(xintercept = POS), data = chr_sizes[1:23,], color="white",size=1.5)+
+  geom_vline(aes(xintercept = POS), data = chr_sizes[1:23,], color="white",linewidth=1.5)+
   scale_x_continuous(breaks=chr_sizes$POS_LABELS,labels=chr_sizes$CHROM,limits = c(-10000000,3105677412),expand = c(0, 0)) +
   ylab("SNV inter-mutation distance (log10)")+
   theme(text = element_text(size = 20),
@@ -217,7 +217,7 @@ ggplot(data = tsv, aes(x = POS_ABS, y = as.numeric(IMD))) +
 
 ### SNV-SNV clusters plot ### 
 ggplot(data = tsv, aes(x = POS_ABS, y = as.numeric(IMD))) +
-  geom_vline(aes(xintercept = POS), data = chr_sizes[1:23,], color="white",size=1.5)+
+  geom_vline(aes(xintercept = POS), data = chr_sizes[1:23,], color="white",linewidth=1.5)+
   scale_x_continuous(breaks=chr_sizes$POS_LABELS,labels=chr_sizes$CHROM,limits = c(-10000000,3105677412),expand = c(0, 0)) +
   ylab("SNV inter-mutation distance (log10)")+
   theme(text = element_text(size = 20),
@@ -253,7 +253,7 @@ tsv %>% filter(SVSNV=="CLOSE") %>% count(SignatureDenovo) %>% mutate(SignatureDe
 tsv %>% filter(SVSNV=="UNCLUSTERED") %>% count(SignatureDenovo) %>% mutate(SignatureDenovo=gsub("-Unclustered","",SignatureDenovo)) %>% mutate(string = paste0(SignatureDenovo, " - ", n, "  |  ")) %>% summarize(string = paste(string, collapse = "")) %>% mutate(string = str_sub(string, end = -6)) %>% pull(string) -> sub3
 ### De novo signature plot ### 
 ggplot(data = tsv, aes(x = POS_ABS, y = as.numeric(IMD))) +
-  geom_vline(aes(xintercept = POS), data = chr_sizes[1:23,], color="white",size=1.5)+
+  geom_vline(aes(xintercept = POS), data = chr_sizes[1:23,], color="white",linewidth=1.5)+
   scale_x_continuous(breaks=chr_sizes$POS_LABELS,labels=chr_sizes$CHROM,limits = c(-10000000,3105677412),expand = c(0, 0)) +
   ylab("SNV inter-mutation distance (log10)")+
   theme(text = element_text(size = 20),
@@ -284,7 +284,7 @@ if (str_count(sub4, "\\|")>11){
   sub4 <- paste0(paste0(split_string[1:count], collapse = "  |  "),"\n",paste0(split_string[(count+1):length(split_string)], collapse = "  |  "))}
 ### Decomposed signature plot ### 
 ggplot(data = tsv, aes(x = POS_ABS, y = as.numeric(IMD))) +
-  geom_vline(aes(xintercept = POS), data = chr_sizes[1:23,], color="white",size=1.5)+
+  geom_vline(aes(xintercept = POS), data = chr_sizes[1:23,], color="white",linewidth=1.5)+
   scale_x_continuous(breaks=chr_sizes$POS_LABELS,labels=chr_sizes$CHROM,limits = c(-10000000,3105677412),expand = c(0, 0)) +
   ylab("SNV inter-mutation distance (log10)")+
   theme(text = element_text(size = 20),
