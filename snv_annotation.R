@@ -41,9 +41,6 @@ close_denovo=fread(args[21])
 unclustered_decomp=fread(args[22])
 unclustered_denovo=fread(args[23])
 
-print(sizeunclustered)
-print(ounclustered)
-
 #change signature names
 colnames(closer_denovo)[3:ncol(closer_denovo)]=paste0(colnames(closer_denovo)[3:ncol(closer_denovo)],"-Closer"); colnames(closer_denovo)[3:ncol(closer_denovo)]=gsub("SBS96","",colnames(closer_denovo)[3:ncol(closer_denovo)])
 colnames(close_denovo)[3:ncol(close_denovo)]=paste0(colnames(close_denovo)[3:ncol(close_denovo)],"-Close"); colnames(close_denovo)[3:ncol(close_denovo)]=gsub("SBS96","",colnames(close_denovo)[3:ncol(close_denovo)])
