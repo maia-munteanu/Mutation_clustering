@@ -140,6 +140,8 @@ process randomise_snvs {
        tag { sample }
        errorStrategy 'retry'
        memory { 30.GB * task.attempt }
+       time { 12.h * task.attempt }
+
        input:
        path serial from serial_genome
        tuple val(sample), file(snv2rand) from snvs_to_randomise
