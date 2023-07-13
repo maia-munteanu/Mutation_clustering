@@ -214,6 +214,9 @@ process get_sv_snv_clusters {
 
 process get_snv_clusters {
        tag { sample }
+       errorStrategy 'retry'
+       memory { 15.GB * task.attempt }
+
        publishDir params.output_folder+"/Plots/SNV-SNV", mode: 'move', pattern: '*_plot.pdf'
     
        input:
