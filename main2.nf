@@ -141,6 +141,7 @@ process randomise_snvs {
        errorStrategy 'retry'
        memory { 30.GB * task.attempt }
        time { 12.h * task.attempt }
+       queue { task.attempt > 2 ? 'normal_prio_long' : 'normal_prio' }
 
        input:
        path serial from serial_genome
